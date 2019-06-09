@@ -89,7 +89,7 @@ Without comments:
 ```
 @echoExample
 new [i32] $input
-set $input 
+set $input 0
 new [i32] $echo
 new [args] $args
 bind $args $input

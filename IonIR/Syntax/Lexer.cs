@@ -151,8 +151,8 @@ namespace Ion.IR.Syntax
                 return token;
             }
 
-            // Test string against symbol token type.
-            foreach (var pair in TokenConstants.symbols)
+            // Test string against simple token types.
+            foreach (var pair in TokenConstants.simple)
             {
                 // Possible candidate.
                 if (pair.Key.StartsWith(this.Char.Value))

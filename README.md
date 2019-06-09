@@ -93,7 +93,7 @@ set $input
 new [i32] $echo
 new [args] $args
 bind $args $input
-call routine2 $args
+call echo $args
 end $echo
 
 @echo

@@ -11,7 +11,14 @@ namespace Ion.IR.Generation
 
         public Routine Build()
         {
-            return new Routine(this.Name, this.Instructions);
+            // Create the default routine options.
+            RoutineOptions options = Routine.DefaultOptions;
+
+            // Modify the routine's name.
+            options.Name = this.Name;
+
+            // Create and return the routine.
+            return new Routine(options);
         }
     }
 }

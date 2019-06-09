@@ -5,5 +5,9 @@ namespace Ion.IR.Constants
         public const string IdPrefix = "$";
 
         public const string RoutinePrefix = "@";
+
+        public const string Pointer = "*";
+
+        public const string TypePrefix = ":";
     }
 }

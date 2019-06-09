@@ -4,7 +4,7 @@ namespace Ion.IR.Misc
 {
     public class FixedStringBuilder
     {
-        protected readonly StringBuilder builder;
+        public readonly StringBuilder builder;
 
         public FixedStringBuilder()
         {

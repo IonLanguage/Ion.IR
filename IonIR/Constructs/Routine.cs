@@ -5,26 +5,41 @@ using Ion.IR.Misc;
 
 namespace Ion.IR.Constructs
 {
+    public struct RoutineOptions
+    {
+        public string Name { get; set; }
+
+        public Type[] Args { get; set; }
+
+        public Type ReturnType { get; set; }
+
+        public Instruction[] Instructions { get; set; }
+    }
+
     public class Routine : IConstruct
     {
+        public static readonly RoutineOptions DefaultOptions = new RoutineOptions
+        {
+            Name = SpecialName.Unknown,
+            Args = new Type[] { },
+            Instructions = new Instruction[] { },
+            ReturnType = TypeFactory.Void
+        };
+
         public string Name { get; }
+
+        public Type[] Args { get; }
+
+        public Type ReturnType { get; }
 
         public Instruction[] Instructions { get; }
 
-        public Routine(string name, Instruction[] instructions)
+        public Routine(RoutineOptions options)
         {
-            this.Name = name;
-            this.Instructions = instructions;
-        }
-
-        public Routine(string name, List<Instruction> instructions) : this(name, instructions.ToArray())
-        {
-            //
-        }
-
-        public Routine(string name) : this(name, new Instruction[] { })
-        {
-            //
+            this.Name = options.Name;
+            this.Args = options.Args;
+            this.ReturnType = options.ReturnType;
+            this.Instructions = options.Instructions;
         }
 
         public string Emit()
@@ -32,8 +47,24 @@ namespace Ion.IR.Constructs
             // Create a new fixed string builder instance.
             FixedStringBuilder builder = new FixedStringBuilder();
 
+            // Emit the arguments.
+            List<string> argsBuffer = new List<string>();
+
+            // Loop through all arguments.
+            foreach (Type arg in this.Args)
+            {
+                // Emit argument and store in the buffer.
+                argsBuffer.Add(arg.Emit());
+            }
+
+            // Convert buffer to an array.
+            string[] argArray = argsBuffer.ToArray();
+
+            // Join arguments.
+            string args = string.Join(", ", argArray);
+
             // Append the routine's header.
-            builder.Append($"{Symbol.RoutinePrefix}{this.Name}");
+            builder.Append($"{this.ReturnType.Emit()} {Symbol.RoutinePrefix}{this.Name}({args})");
 
             // Emit instructions.
             foreach (Instruction instruction in this.Instructions)

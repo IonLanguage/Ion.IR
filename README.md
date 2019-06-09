@@ -1,3 +1,5 @@
+![CircleCI](https://circleci.com/gh/IonLanguage/Ion.svg?style=svg)
+
 #### Ion.IR
 
 IonIR (Ion's intermediate representation) manipulation library. Used to create, manipulate and generate IonIR constructs.

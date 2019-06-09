@@ -86,6 +86,7 @@ namespace Ion.IR.Syntax
                 nextToken = this.GetNextToken();
             }
 
+            // Return the resulting tokens as an array.
             return tokens.ToArray();
         }
 

@@ -61,7 +61,7 @@ Note that there is no concept of special Routines (ex. main or entry points).
 #### Echoing input argument
 
 ```llvm
-:void @echoExample()
+@echoExample() :void
 # Create the input value.
 new :i32 $input;
 set $input;
@@ -82,7 +82,7 @@ call routine2 $args;
 end $echo;
 
 # Will return input argument (must be of type i32).
-:i32 @echo(i32)
+@echo(i32) :i32
 
 # Access local arguments using $0 or $1 corresponding to their index.
 end :i32 $0;
@@ -91,7 +91,7 @@ end :i32 $0;
 Without comments:
 
 ```llvm
-:void @echoExample()
+@echoExample() :void
 new :i32 $input;
 set $input 0;
 new :i32 $echo;
@@ -100,6 +100,6 @@ bind $args $input;
 call echo $args;
 end $echo;
 
-:i32 @echo(i32)
+@echo(i32) :i32
 end :i32 $0;
 ```

@@ -4,4 +4,7 @@
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>Ion.IR</RootNamespace>
     </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Ion.Engine/IonEngine/Ion.Engine.csproj" />
+    </ItemGroup>
 </Project>

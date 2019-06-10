@@ -1,29 +1,12 @@
+using Ion.Engine.Syntax;
+
 namespace Ion.IR.Syntax
 {
-    public struct Token
+    public class Token : GenericToken<TokenType>
     {
-        public TokenType Type;
-
-        public string Value;
-
-        public int StartPos;
-
-        /// <summary>
-        /// The end position of this token.
-        /// Returns the start position if the value is null.
-        /// </summary>
-        public int EndPos
+        public Token(TokenType type, string value, int startPos) : base(type, value, startPos)
         {
-            get
-            {
-                // No value is set.
-                if (this.Value == null)
-                {
-                    return this.StartPos;
-                }
-
-                return this.StartPos + this.Value.Length;
-            }
+            //
         }
     }
 }

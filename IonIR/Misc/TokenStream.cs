@@ -1,3 +1,4 @@
+using Ion.Engine.Syntax;
 using Ion.IR.Syntax;
 
 namespace Ion.IR.Misc

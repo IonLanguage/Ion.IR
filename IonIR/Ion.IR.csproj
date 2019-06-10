@@ -2,6 +2,8 @@
     <PropertyGroup>
         <OutputType>Library</OutputType>
         <TargetFramework>netcoreapp2.2</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>8.0</LangVersion>
         <RootNamespace>Ion.IR</RootNamespace>
     </PropertyGroup>
     <ItemGroup>

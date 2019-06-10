@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Ion.Engine.Constants;
 using Ion.Engine.Misc;
 using Ion.IR.Misc;
 using Ion.IR.Syntax;

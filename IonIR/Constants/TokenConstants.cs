@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Ion.Engine.Misc;
 using Ion.IR.Misc;
 using Ion.IR.Syntax;
 
@@ -22,17 +23,16 @@ namespace Ion.IR.Constants
             {InstructionName.End, TokenType.InstructionEnd},
             {InstructionName.Create, TokenType.InstructionCreate},
             {InstructionName.Set, TokenType.InstructionSet}
-        }.SortByKeyLength();
+        }.SortByKeyLength<TokenType>();
 
         public static Dictionary<string, TokenType> simple = new[]
         {
             TokenConstants.instructions,
             TokenConstants.symbols
-        }
-        .SelectMany(dictionary => dictionary)
+        }.SelectMany(dictionary => dictionary)
         .ToLookup(pair => pair.Key, pair => pair.Value)
         .ToDictionary(group => group.Key, group => group.First())
-        .SortByKeyLength();
+        .SortByKeyLength<TokenType>();
 
         public static readonly Dictionary<Regex, TokenType> complex = new Dictionary<Regex, TokenType>
         {

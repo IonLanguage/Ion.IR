@@ -1,0 +1,3 @@
+[submodule "Ion.Engine"]
+	path = Ion.Engine
+	url = https://github.com/IonLanguage/Ion.Engine

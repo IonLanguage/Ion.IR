@@ -6,5 +6,6 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="LLVMSharp" Version="5.0.0" />
+        <ProjectReference Include="../Ion.Engine/IonEngine/Ion.Engine.csproj" />
     </ItemGroup>
 </Project>

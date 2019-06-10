@@ -4,4 +4,7 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <RootNamespace>Ion.IR</RootNamespace>
     </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="LLVMSharp" Version="5.0.0" />
+    </ItemGroup>
 </Project>

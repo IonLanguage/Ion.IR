@@ -1,4 +1,4 @@
-
+using System;
 using Ion.Engine.CodeGeneration.Helpers;
 using Ion.Engine.Parsing;
 using Ion.IR.Constructs;
@@ -31,10 +31,12 @@ namespace Ion.IR.Parsing
             // Begin argument parsing.
             while (buffer.Type != TokenType.SymbolParenthesesR)
             {
-                // TODO
+                // TODO: Finish implementing.
 
                 buffer = context.Stream.Current;
             }
+
+            throw new NotImplementedException();
         }
     }
 }

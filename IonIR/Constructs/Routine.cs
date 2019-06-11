@@ -9,7 +9,7 @@ namespace Ion.IR.Constructs
     {
         public string Name { get; set; }
 
-        public Kind[] Args { get; set; }
+        public (Kind, Reference)[] Args { get; set; }
 
         public Kind ReturnType { get; set; }
 
@@ -23,14 +23,14 @@ namespace Ion.IR.Constructs
         public static readonly RoutineOptions DefaultOptions = new RoutineOptions
         {
             Name = SpecialName.Unknown,
-            Args = new Kind[] { },
+            Args = new (Kind, Reference)[] { },
             Instructions = new Instruction[] { },
             ReturnType = TypeFactory.Void
         };
 
         public string Name { get; }
 
-        public Kind[] Args { get; }
+        public (Kind, Reference)[] Args { get; }
 
         public Kind ReturnType { get; }
 
@@ -53,18 +53,20 @@ namespace Ion.IR.Constructs
             List<string> argsBuffer = new List<string>();
 
             // Loop through all arguments.
-            foreach (Kind arg in this.Args)
+            foreach ((Kind kind, Reference reference) in this.Args)
             {
                 // Emit argument and store in the buffer.
-                argsBuffer.Add(arg.Emit());
+                argsBuffer.Add($"{kind.Emit()} {reference.Emit()}");
             }
 
             // Convert buffer to an array.
             string[] argArray = argsBuffer.ToArray();
 
+            // TODO: Comma is hard-coded.
             // Join arguments.
-            string args = string.Join(", ", argArray);
+            string args = string.Join(", ", argArray).Trim();
 
+            // TODO: Same hard-coded for parentheses.
             // Append the routine's header.
             builder.Append($"{this.ReturnType.Emit()} {Symbol.RoutinePrefix}{this.Name}({args})");
 

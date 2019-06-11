@@ -22,6 +22,8 @@ namespace Ion.IR.Syntax
 
         SymbolColon,
 
+        SymbolComma,
+
         SymbolDollar,
 
         SymbolHash,
@@ -31,6 +33,10 @@ namespace Ion.IR.Syntax
         SymbolParenthesesL,
 
         SymbolParenthesesR,
+
+        SymbolBracketL,
+
+        SymbolBracketR,
 
         InstructionCall,
 

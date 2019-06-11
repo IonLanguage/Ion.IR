@@ -2,11 +2,11 @@ using Ion.IR.Misc;
 
 namespace Ion.IR.Parsing
 {
-    public class PipeContext
+    public class ParserContext
     {
         public TokenStream Stream { get; }
 
-        public PipeContext(TokenStream stream)
+        public ParserContext(TokenStream stream)
         {
             this.Stream = stream;
         }

@@ -1,12 +1,13 @@
 using Ion.Engine.CodeGeneration.Helpers;
+using Ion.Engine.Parsing;
 using Ion.IR.Constructs;
 using Ion.IR.Syntax;
 
 namespace Ion.IR.Parsing
 {
-    public class IdParser : IPipe<PipeContext, Id>
+    public class IdParser : IParser<Id>
     {
-        public Id Emit(PipeContext context)
+        public Id Parse(ParserContext context)
         {
             // Ensure current token is of type symbol dollar.
             context.Stream.EnsureCurrent(TokenType.SymbolDollar);

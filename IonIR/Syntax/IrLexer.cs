@@ -90,7 +90,8 @@ namespace Ion.IR.Syntax
                     if (this.MatchExpression(token, pair.Value, pattern, out token))
                     {
                         // Reduce the position.
-                        this.SetPosition(this.Position - token.Value.Length - pair.Key.Length);
+                        // TODO: Causing problems, works when commented HERE.
+                        //this.SetPosition(this.Position - token.Value.Length - pair.Key.Length);
 
                         // Skim the last character off.
                         token = new Token(token.Type, pair.Key, token.StartPos);

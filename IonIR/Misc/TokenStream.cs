@@ -6,6 +6,11 @@ namespace Ion.IR.Misc
 {
     public class TokenStream : Stream<Token>
     {
+        public TokenStream(Token[] items) : base(items)
+        {
+            //
+        }
+
         /// <summary>
         /// Ensure that the current token's type
         /// matches the token type provided, otherwise

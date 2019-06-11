@@ -7,6 +7,7 @@ namespace Ion.IR.Tests.Instructions
     [TestFixture]
     public class RoutineTests
     {
+        [Test]
         [TestCase("test", ":void @test()")]
         public void Simple(string input, string output)
         {
@@ -26,6 +27,7 @@ namespace Ion.IR.Tests.Instructions
             Assert.AreEqual(output, result);
         }
 
+        [Test]
         [TestCase("test", "inst", ":void @test()\ninst")]
         public void WithSimpleInstruction(string name, string instructionName, string output)
         {

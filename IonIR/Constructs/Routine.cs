@@ -18,7 +18,7 @@ namespace Ion.IR.Constructs
 
     public class Routine : IConstruct
     {
-        public ConstructType ConstructType => ConstructType.Routine;
+        public readonly ConstructType ConstructType => ConstructType.Routine;
 
         public static readonly RoutineOptions DefaultOptions = new RoutineOptions
         {

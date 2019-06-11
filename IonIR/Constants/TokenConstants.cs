@@ -21,7 +21,8 @@ namespace Ion.IR.Constants
             {")", TokenType.SymbolParenthesesR},
             {"[", TokenType.SymbolBracketL},
             {"]", TokenType.SymbolBracketR},
-            {",", TokenType.SymbolComma}
+            {",", TokenType.SymbolComma},
+            {"~", TokenType.SymbolTilde}
         }.SortByKeyLength();
 
         public static Dictionary<string, TokenType> instructions = new Dictionary<string, TokenType>

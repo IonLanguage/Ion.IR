@@ -24,6 +24,8 @@ namespace Ion.IR.Syntax
 
         SymbolComma,
 
+        SymbolTilde,
+
         SymbolDollar,
 
         SymbolHash,

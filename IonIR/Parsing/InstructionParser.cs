@@ -35,10 +35,17 @@ namespace Ion.IR.Parsing
                 args.Add(arg);
             }
 
+            // Ensure current token is of type semi-colon.
+            context.Stream.EnsureCurrent(TokenType.SymbolSemiColon);
+
+            // Skip semi-colon token.
+            context.Stream.Skip();
+
             // Create the instruction construct.
             Instruction instruction = new Instruction(name, args.ToArray());
 
             // Return the resulting instruction.
+            return instruction;
         }
     }
 }

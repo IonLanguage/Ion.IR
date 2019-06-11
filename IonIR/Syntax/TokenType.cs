@@ -28,6 +28,10 @@ namespace Ion.IR.Syntax
 
         SymbolSemiColon,
 
+        SymbolParenthesesL,
+
+        SymbolParenthesesR,
+
         InstructionCall,
 
         InstructionEnd,

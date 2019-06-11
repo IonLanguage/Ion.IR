@@ -2,19 +2,22 @@ namespace Ion.IR.Constructs
 {
     public struct Value : IConstruct
     {
-        public ConstructType Type => ConstructType.Value;
+        public ConstructType ConstructType => ConstructType.Value;
+
+        public Kind Kind { get; }
 
         public string Content { get; }
 
-        public Value(string content)
+        public Value(Kind kind, string content)
         {
+            this.Kind = kind;
             this.Content = content;
         }
 
         public string Emit()
         {
-            // TODO: Implement.
-            return this.Content;
+            // TODO: Hard-coded symbols.
+            return $"({this.Kind.Emit()}){this.Content}";
         }
     }
 }

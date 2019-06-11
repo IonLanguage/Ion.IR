@@ -4,7 +4,7 @@ namespace Ion.IR.Constructs
 {
     public class Kind : IConstruct
     {
-        public ConstructType Type => ConstructType.Type;
+        public ConstructType ConstructType => ConstructType.Type;
 
         public string Name { get; }
 

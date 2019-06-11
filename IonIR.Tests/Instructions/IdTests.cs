@@ -11,7 +11,7 @@ namespace Ion.IR.Tests.Instructions
         public void Emit(string input, string output)
         {
             // Create the construct.
-            Id id = new Id(input);
+            Reference id = new Reference(input);
 
             // Emit the construct.
             string result = id.Emit();

@@ -1,4 +1,6 @@
 using System;
+using Ion.Engine.Constants;
+using Ion.IR.Cognition;
 using Ion.IR.Constructs;
 using Ion.IR.Syntax;
 
@@ -8,18 +10,17 @@ namespace Ion.IR.Parsing
     {
         public IConstruct Parse(ParserContext context)
         {
-            // Abstract the token type of the current token.
-            TokenType currentType = context.Stream.Current.Type;
+            // Abstract the current token.
+            Token token = context.Stream.Current;
 
             // Id construct.
-            if (currentType == TokenType.SymbolDollar)
+            if (token.Type == TokenType.SymbolDollar)
             {
-                return new IdParser().Parse(context);
+                return new ReferenceParser().Parse(context);
             }
-            else
-            {
-                throw new Exception("Unrecognized construct");
-            }
+
+            // Otherwise, it must be a value.
+            return new ValueParser().Parse(context);
         }
     }
 }

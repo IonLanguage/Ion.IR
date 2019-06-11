@@ -2,13 +2,13 @@ using Ion.IR.Constants;
 
 namespace Ion.IR.Constructs
 {
-    public struct Id : IConstruct
+    public struct Reference : IConstruct
     {
-        public ConstructType Type => ConstructType.Id;
+        public ConstructType ConstructType => ConstructType.Id;
 
         public string Value { get; }
 
-        public Id(string value)
+        public Reference(string value)
         {
             this.Value = value;
         }

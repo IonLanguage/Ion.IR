@@ -5,7 +5,7 @@ namespace Ion.IR.Constructs
 {
     public struct Instruction : IConstruct
     {
-        public ConstructType Type => ConstructType.Instruction;
+        public ConstructType ConstructType => ConstructType.Instruction;
 
         public string Name { get; }
 
@@ -30,18 +30,11 @@ namespace Ion.IR.Constructs
             // Append the name.
             cells.Add(this.Name);
 
-            // Check for existing arguments.
-            if (this.Args.HasValue)
+            // Loop through all the arguments.
+            foreach (IConstruct arg in this.Args)
             {
-                // Emit and append left argument.
-                cells.Add(this.Args.Value.Left.Emit());
-
-                // Append right argument if applicable.
-                if (this.Args.Value.Right.HasValue)
-                {
-                    // Emit and append right argument.
-                    cells.Add(this.Args.Value.Right.Value.Emit());
-                }
+                // Emit and append the argument.
+                cells.Add(arg.Emit());
             }
 
             // Join cells onto the resulting string, separated by a space.

@@ -2,7 +2,7 @@ namespace Ion.IR.Constructs
 {
     public interface IConstruct
     {
-        ConstructType Type { get; }
+        ConstructType ConstructType { get; }
 
         string Emit();
     }

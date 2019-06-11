@@ -23,7 +23,7 @@ namespace Ion.IR.Tests.Parsing
             ParserContext context = new ParserContext(stream);
 
             // Invoke the parser.
-            Id result = new IdParser().Parse(context);
+            Reference result = new ReferenceParser().Parse(context);
 
             // Compare resulting value.
             Assert.AreEqual(expectedValue, result.Value);

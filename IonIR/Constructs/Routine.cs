@@ -9,28 +9,30 @@ namespace Ion.IR.Constructs
     {
         public string Name { get; set; }
 
-        public Type[] Args { get; set; }
+        public Kind[] Args { get; set; }
 
-        public Type ReturnType { get; set; }
+        public Kind ReturnType { get; set; }
 
         public Instruction[] Instructions { get; set; }
     }
 
     public class Routine : IConstruct
     {
+        public ConstructType Type => ConstructType.Routine;
+
         public static readonly RoutineOptions DefaultOptions = new RoutineOptions
         {
             Name = SpecialName.Unknown,
-            Args = new Type[] { },
+            Args = new Kind[] { },
             Instructions = new Instruction[] { },
             ReturnType = TypeFactory.Void
         };
 
         public string Name { get; }
 
-        public Type[] Args { get; }
+        public Kind[] Args { get; }
 
-        public Type ReturnType { get; }
+        public Kind ReturnType { get; }
 
         public Instruction[] Instructions { get; }
 
@@ -51,7 +53,7 @@ namespace Ion.IR.Constructs
             List<string> argsBuffer = new List<string>();
 
             // Loop through all arguments.
-            foreach (Type arg in this.Args)
+            foreach (Kind arg in this.Args)
             {
                 // Emit argument and store in the buffer.
                 argsBuffer.Add(arg.Emit());

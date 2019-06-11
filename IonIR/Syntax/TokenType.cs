@@ -26,6 +26,8 @@ namespace Ion.IR.Syntax
 
         SymbolHash,
 
+        SymbolSemiColon,
+
         InstructionCall,
 
         InstructionEnd,

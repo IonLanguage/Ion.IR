@@ -15,7 +15,8 @@ namespace Ion.IR.Constants
             {"@", TokenType.SymbolAt},
             {":", TokenType.SymbolColon},
             {"$", TokenType.SymbolDollar},
-            {"#", TokenType.SymbolHash}
+            {"#", TokenType.SymbolHash},
+            {";", TokenType.SymbolSemiColon}
         }.SortByKeyLength();
 
         public static Dictionary<string, TokenType> instructions = new Dictionary<string, TokenType>

@@ -2,13 +2,15 @@ using Ion.IR.Constants;
 
 namespace Ion.IR.Constructs
 {
-    public class Type : IConstruct
+    public class Kind : IConstruct
     {
+        public ConstructType Type => ConstructType.Type;
+
         public string Name { get; }
 
         public bool IsPointer { get; }
 
-        public Type(string name, bool isPointer = false)
+        public Kind(string name, bool isPointer = false)
         {
             this.Name = name;
             this.IsPointer = isPointer;

@@ -4,6 +4,6 @@ namespace Ion.IR.Constants
 {
     public static class TypeFactory
     {
-        public static Type Void => new Type(TypeName.Void);
+        public static Kind Void => new Kind(TypeName.Void);
     }
 }

@@ -5,14 +5,21 @@ namespace Ion.IR.Constructs
 {
     public struct Instruction : IConstruct
     {
+        public ConstructType Type => ConstructType.Instruction;
+
         public string Name { get; }
 
-        public InstructionArgs? Args { get; }
+        public IConstruct[] Args { get; }
 
-        public Instruction(string name, InstructionArgs? args = null)
+        public Instruction(string name, IConstruct[] args)
         {
             this.Name = name;
             this.Args = args;
+        }
+
+        public Instruction(string name) : this(name, new IConstruct[] { })
+        {
+            //
         }
 
         public string Emit()

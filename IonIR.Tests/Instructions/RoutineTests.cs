@@ -14,7 +14,7 @@ namespace Ion.IR.Tests.Instructions
             // Create the construct.
             Routine routine = new Routine(new RoutineOptions
             {
-                Args = new Type[] { },
+                Args = new Kind[] { },
                 Instructions = new Instruction[] { },
                 Name = input,
                 ReturnType = TypeFactory.Void
@@ -34,7 +34,7 @@ namespace Ion.IR.Tests.Instructions
             // Create the construct.
             Routine routine = new Routine(new RoutineOptions
             {
-                Args = new Type[] { },
+                Args = new Kind[] { },
                 Name = name,
                 ReturnType = TypeFactory.Void,
 

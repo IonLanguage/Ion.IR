@@ -9,12 +9,12 @@ namespace Ion.IR.Constructs
 
         public string Name { get; }
 
-        public IConstruct[] Args { get; }
+        public IConstruct[] Inputs { get; }
 
-        public Instruction(string name, IConstruct[] args)
+        public Instruction(string name, IConstruct[] inputs)
         {
             this.Name = name;
-            this.Args = args;
+            this.Inputs = inputs;
         }
 
         public Instruction(string name) : this(name, new IConstruct[] { })
@@ -30,11 +30,11 @@ namespace Ion.IR.Constructs
             // Append the name.
             cells.Add(this.Name);
 
-            // Loop through all the arguments.
-            foreach (IConstruct arg in this.Args)
+            // Loop through all the inputs.
+            foreach (IConstruct input in this.Inputs)
             {
                 // Emit and append the argument.
-                cells.Add(arg.Emit());
+                cells.Add(input.Emit());
             }
 
             // Join cells onto the resulting string, separated by a space.

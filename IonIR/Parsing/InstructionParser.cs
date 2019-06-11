@@ -22,17 +22,17 @@ namespace Ion.IR.Parsing
             // Create a buffer for the current token.
             Token token = context.Stream.Get();
 
-            // Create the argument buffer list.
-            List<IConstruct> args = new List<IConstruct>();
+            // Create the inputs buffer list.
+            List<IConstruct> inputs = new List<IConstruct>();
 
             // Instruction contains arguments.
             while (token.Type != TokenType.SymbolSemiColon)
             {
-                // Invoke the argument parser.
-                IConstruct arg = new ArgParser().Parse(context);
+                // Invoke the input parser.
+                IConstruct input = new InputParser().Parse(context);
 
-                // Append the argument to the list.
-                args.Add(arg);
+                // Append the input to the list.
+                inputs.Add(input);
             }
 
             // Ensure current token is of type semi-colon.
@@ -42,7 +42,7 @@ namespace Ion.IR.Parsing
             context.Stream.Skip();
 
             // Create the instruction construct.
-            Instruction instruction = new Instruction(name, args.ToArray());
+            Instruction instruction = new Instruction(name, inputs.ToArray());
 
             // Return the resulting instruction.
             return instruction;

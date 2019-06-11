@@ -6,7 +6,7 @@ using Ion.IR.Syntax;
 
 namespace Ion.IR.Parsing
 {
-    public class ArgParser : IParser<IConstruct>
+    public class InputParser : IParser<IConstruct>
     {
         public IConstruct Parse(ParserContext context)
         {

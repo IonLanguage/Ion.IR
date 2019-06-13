@@ -14,6 +14,8 @@ namespace Ion.IR.Constructs
 
         Routine,
 
-        Section
+        Section,
+
+        Metadata
     }
 }

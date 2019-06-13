@@ -40,6 +40,8 @@ namespace Ion.IR.Syntax
 
         SymbolBracketR,
 
+        SymbolExclamation,
+
         InstructionCall,
 
         InstructionEnd,

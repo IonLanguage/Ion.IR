@@ -14,10 +14,10 @@ namespace Ion.IR.Tests.Instructions
             // Create the construct.
             Routine routine = new Routine(new RoutineOptions
             {
-                Args = new Kind[] { },
-                Instructions = new Instruction[] { },
+                Args = new (Kind, Reference)[] { },
+                Sections = new Section[] { },
                 Name = input,
-                ReturnType = TypeFactory.Void
+                ReturnKind = KindFactory.Void
             });
 
             // Emit the construct.
@@ -28,18 +28,18 @@ namespace Ion.IR.Tests.Instructions
         }
 
         [Test]
-        [TestCase("test", "inst", ":void @test()\ninst")]
-        public void WithSimpleInstruction(string name, string instructionName, string output)
+        [TestCase("test", "inst", ":void @test()\ninst:")]
+        public void WithSimpleInstruction(string name, string sectionName, string output)
         {
             // Create the construct.
             Routine routine = new Routine(new RoutineOptions
             {
-                Args = new Kind[] { },
+                Args = new (Kind, Reference)[] { },
                 Name = name,
-                ReturnType = TypeFactory.Void,
+                ReturnKind = KindFactory.Void,
 
-                Instructions = new Instruction[] {
-                    new Instruction(instructionName)
+                Sections = new Section[] {
+                    new Section(sectionName)
                 },
             });
 

@@ -62,28 +62,29 @@ namespace Ion.IR.Parsing
                 buffer = context.Stream.Current;
             }
 
-            // TODO: MISSING RETURN KIND!
-
             // Ensure current token is symbol parentheses end.
             context.Stream.EnsureCurrent(TokenType.SymbolParenthesesR);
 
             // Skip parentheses end.
             context.Stream.Skip();
 
-            // Update the buffer.
+            // Invoke kind parser to parse return kind.
+            Kind returnKind = new KindParser().Parse(context);
+
+            // Update the token buffer.
             buffer = context.Stream.Current;
 
-            // Create the body's instruction buffer list.
-            List<Instruction> body = new List<Instruction>();
+            // Create the section buffer list.
+            List<Section> sections = new List<Section>();
 
-            // Begin body parsing.
+            // Begin instruction parsing.
             while (buffer.Type != TokenType.SymbolTilde)
             {
-                // Invoke instruction parser.
-                Instruction instruction = new InstructionParser().Parse(context);
+                // Invoke section parser.
+                Section section = new SectionParser().Parse(context);
 
-                // Append the instruction to the body list.
-                body.Add(instruction);
+                // Append the section to the list.
+                sections.Add(section);
             }
 
             // Ensure current token is of type symbol tilde.
@@ -96,9 +97,9 @@ namespace Ion.IR.Parsing
             Routine routine = new Routine(new RoutineOptions
             {
                 Args = args.ToArray(),
-                Instructions = body.ToArray(),
+                Sections = sections.ToArray(),
                 Name = identifier,
-                // ReturnType = nu
+                ReturnKind = returnKind
             });
 
             // Return the resulting routine.

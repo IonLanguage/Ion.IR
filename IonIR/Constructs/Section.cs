@@ -1,0 +1,43 @@
+using Ion.IR.Misc;
+
+namespace Ion.IR.Constructs
+{
+    public class Section : IConstruct
+    {
+        public ConstructType ConstructType => ConstructType.Section;
+
+        public string Name { get; }
+
+        public Instruction[] Instructions { get; }
+
+        public Section(string name, Instruction[] instructions)
+        {
+            this.Name = name;
+            this.Instructions = instructions;
+        }
+
+        public Section(string name) : this(name, new Instruction[] { })
+        {
+            //
+        }
+
+        public string Emit()
+        {
+            // Create a new fixed string builder instance.
+            FixedStringBuilder builder = new FixedStringBuilder();
+
+            // Emit the header.
+            builder.Append($"{this.Name}:");
+
+            // Loop through all instructions.
+            foreach (Instruction instruction in this.Instructions)
+            {
+                // Emit instruction to the builder.
+                builder.Append(instruction.Emit());
+            }
+
+            // Trim and return the resulting string.
+            return builder.ToString().Trim();
+        }
+    }
+}

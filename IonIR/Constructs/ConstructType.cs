@@ -12,6 +12,8 @@ namespace Ion.IR.Constructs
 
         Type,
 
-        Routine
+        Routine,
+
+        Section
     }
 }

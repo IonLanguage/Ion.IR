@@ -1,6 +1,3 @@
-using System;
-using Ion.Engine.Constants;
-using Ion.IR.Cognition;
 using Ion.IR.Constructs;
 using Ion.IR.Syntax;
 

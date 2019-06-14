@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Ion.Engine.CodeGeneration.Helpers;
-using Ion.Engine.Parsing;
 using Ion.IR.Constructs;
 using Ion.IR.Syntax;
 

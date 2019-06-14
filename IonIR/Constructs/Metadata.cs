@@ -1,8 +1,8 @@
 namespace Ion.IR.Constructs
 {
-    public class Metadata : IConstruct
+    public class Metadata : Construct
     {
-        public ConstructType ConstructType => ConstructType.Metadata;
+        public override ConstructType ConstructType => ConstructType.Metadata;
 
         public string Key { get; }
 
@@ -14,7 +14,7 @@ namespace Ion.IR.Constructs
             this.Value = value;
         }
 
-        public string Emit()
+        public override string Emit()
         {
             return $"!'{this.Key}' '{this.Value}'";
         }

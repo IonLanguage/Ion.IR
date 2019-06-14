@@ -2,9 +2,9 @@ using Ion.IR.Misc;
 
 namespace Ion.IR.Constructs
 {
-    public class Section : IConstruct
+    public class Section : Construct
     {
-        public ConstructType ConstructType => ConstructType.Section;
+        public override ConstructType ConstructType => ConstructType.Section;
 
         public string Name { get; }
 
@@ -21,7 +21,7 @@ namespace Ion.IR.Constructs
             //
         }
 
-        public string Emit()
+        public override string Emit()
         {
             // Create a new fixed string builder instance.
             FixedStringBuilder builder = new FixedStringBuilder();

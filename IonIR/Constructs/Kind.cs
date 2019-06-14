@@ -2,9 +2,9 @@ using Ion.IR.Constants;
 
 namespace Ion.IR.Constructs
 {
-    public class Kind : IConstruct
+    public class Kind : Construct
     {
-        public ConstructType ConstructType => ConstructType.Type;
+        public override ConstructType ConstructType => ConstructType.Type;
 
         public string Name { get; }
 
@@ -16,7 +16,7 @@ namespace Ion.IR.Constructs
             this.IsPointer = isPointer;
         }
 
-        public string Emit()
+        public override string Emit()
         {
             // Create the resulting string.
             string result = $"{Symbol.TypePrefix}{this.Name}";

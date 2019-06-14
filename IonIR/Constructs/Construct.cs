@@ -6,4 +6,16 @@ namespace Ion.IR.Constructs
 
         string Emit();
     }
+
+    public abstract class Construct : IConstruct
+    {
+        public abstract ConstructType ConstructType { get; }
+
+        public abstract string Emit();
+
+        public override string ToString()
+        {
+            return this.Emit();
+        }
+    }
 }

@@ -1,10 +1,8 @@
 namespace Ion.IR.Constructs
 {
-    public abstract class EmptyConstruct : IConstruct
+    public abstract class EmptyConstruct : Construct
     {
-        public abstract ConstructType ConstructType { get; }
-
-        public string Emit()
+        public override string Emit()
         {
             return string.Empty;
         }

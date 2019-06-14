@@ -15,9 +15,9 @@ namespace Ion.IR.Constructs
         public Section[] Sections { get; set; }
     }
 
-    public class Routine : IConstruct
+    public class Routine : Construct
     {
-        public ConstructType ConstructType => ConstructType.Routine;
+        public override ConstructType ConstructType => ConstructType.Routine;
 
         public static readonly RoutineOptions DefaultOptions = new RoutineOptions
         {
@@ -43,7 +43,7 @@ namespace Ion.IR.Constructs
             this.Sections = options.Sections;
         }
 
-        public string Emit()
+        public override string Emit()
         {
             // Create a new fixed string builder instance.
             FixedStringBuilder builder = new FixedStringBuilder();

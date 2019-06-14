@@ -1,8 +1,8 @@
 namespace Ion.IR.Constructs
 {
-    public struct Value : IConstruct
+    public class Value : Construct
     {
-        public ConstructType ConstructType => ConstructType.Value;
+        public override ConstructType ConstructType => ConstructType.Value;
 
         public Kind Kind { get; }
 
@@ -14,7 +14,7 @@ namespace Ion.IR.Constructs
             this.Content = content;
         }
 
-        public string Emit()
+        public override string Emit()
         {
             // TODO: Hard-coded symbols.
             return $"({this.Kind.Emit()}){this.Content}";

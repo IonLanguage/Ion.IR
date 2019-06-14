@@ -2,9 +2,9 @@ using Ion.IR.Constants;
 
 namespace Ion.IR.Constructs
 {
-    public struct Reference : IConstruct
+    public class Reference : Construct
     {
-        public ConstructType ConstructType => ConstructType.Id;
+        public override ConstructType ConstructType => ConstructType.Id;
 
         public string Value { get; }
 
@@ -13,7 +13,7 @@ namespace Ion.IR.Constructs
             this.Value = value;
         }
 
-        public string Emit()
+        public override string Emit()
         {
             return $"{Symbol.IdPrefix}{this.Value}";
         }

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace Ion.IR.Constructs
 {
-    public struct Instruction : IConstruct
+    public class Instruction : Construct
     {
-        public ConstructType ConstructType => ConstructType.Instruction;
+        public override ConstructType ConstructType => ConstructType.Instruction;
 
         public string Name { get; }
 
@@ -21,7 +21,7 @@ namespace Ion.IR.Constructs
             //
         }
 
-        public string Emit()
+        public override string Emit()
         {
             // Create the cells buffer list.
             List<string> cells = new List<string>();

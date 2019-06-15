@@ -6,7 +6,7 @@ namespace Ion.IR.Target
     {
         public LlvmFunction Parent { get; }
 
-        public Builder Builder { get; }
+        public LlvmBuilder Builder { get; }
 
         public LlvmBlock(LlvmFunction parent, LLVMBasicBlockRef source) : base(source)
         {
@@ -16,18 +16,18 @@ namespace Ion.IR.Target
 
         public void SetName(string name)
         {
-            LLVM.SetValueName(this.source, name);
+            LLVM.SetValueName(this.reference, name);
         }
 
-        public Builder CreateBuilder()
+        public LlvmBuilder CreateBuilder()
         {
-            return new Builder(this);
+            return new LlvmBuilder(this);
         }
 
         public LlvmValue AsValue()
         {
             // Create a new value wrapper instance.
-            return new LlvmValue(LLVM.BasicBlockAsValue(this.source));
+            return new LlvmValue(LLVM.BasicBlockAsValue(this.reference));
         }
     }
 }

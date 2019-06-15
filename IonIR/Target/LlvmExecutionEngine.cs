@@ -13,7 +13,7 @@ namespace Ion.IR.Target
         public LLVMGenericValueRef RunFunction(LlvmFunction function, LLVMGenericValueRef[] arguments)
         {
             // Run the function and capture its result.
-            LLVMGenericValueRef result = LLVM.RunFunction(this.source, function.Unwrap(), arguments);
+            LLVMGenericValueRef result = LLVM.RunFunction(this.reference, function.Unwrap(), arguments);
 
             // Return the result.
             return result;
@@ -28,7 +28,7 @@ namespace Ion.IR.Target
         public ExitCode RunFunctionAsEntry(LlvmFunction function, string[] arguments)
         {
             // Avoid passing environment values as it may cause undefined behaviour.
-            int exitCode = LLVM.RunFunctionAsMain(this.source, function.Unwrap(), (uint)arguments.Length, arguments, new string[] { });
+            int exitCode = LLVM.RunFunctionAsMain(this.reference, function.Unwrap(), (uint)arguments.Length, arguments, new string[] { });
 
             // Return the exit code wrapped in an exit code helper instance.
             return new ExitCode(exitCode);
@@ -42,7 +42,7 @@ namespace Ion.IR.Target
 
         public void Dispose()
         {
-            LLVM.DisposeExecutionEngine(this.source);
+            LLVM.DisposeExecutionEngine(this.reference);
         }
     }
 }

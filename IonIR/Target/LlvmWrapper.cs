@@ -1,17 +1,22 @@
 namespace Ion.IR.Target
 {
-    public class LlvmWrapper<T>
+    public interface IWrapper<T>
     {
-        protected readonly T source;
+        T Unwrap();
+    }
+
+    public abstract class LlvmWrapper<T> : IWrapper<T>
+    {
+        protected readonly T reference;
 
         public LlvmWrapper(T source)
         {
-            this.source = source;
+            this.reference = source;
         }
 
         public T Unwrap()
         {
-            return this.source;
+            return this.reference;
         }
     }
 }

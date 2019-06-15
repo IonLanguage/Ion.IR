@@ -11,7 +11,7 @@ namespace Ion.IR.Target
 
         public void SetName(string name)
         {
-            LLVM.SetValueName(this.source, name);
+            LLVM.SetValueName(this.reference, name);
         }
     }
 }

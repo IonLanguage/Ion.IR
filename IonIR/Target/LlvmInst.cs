@@ -9,7 +9,7 @@ namespace Ion.IR.Target
             //
         }
 
-        public void InsertIntoBuilder(Builder builder)
+        public void InsertIntoBuilder(LlvmBuilder builder)
         {
             builder.InsertInstruction(this);
         }

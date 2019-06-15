@@ -6,7 +6,7 @@ using LLVMSharp;
 namespace Ion.IR.Target
 {
 
-    public class Builder : LlvmWrapper<LLVMBuilderRef>, IDisposable
+    public class LlvmBuilder : LlvmWrapper<LLVMBuilderRef>, IDisposable
     {
         public LlvmBlock Block { get; }
 
@@ -16,13 +16,13 @@ namespace Ion.IR.Target
 
         protected readonly List<LlvmInst> instructions;
 
-        public Builder(LlvmBlock block, LLVMBuilderRef source) : base(source)
+        public LlvmBuilder(LlvmBlock block, LLVMBuilderRef source) : base(source)
         {
             this.instructions = new List<LlvmInst>();
             this.PositionAtEnd();
         }
 
-        public Builder(LlvmBlock block) : this(block, LLVM.CreateBuilder())
+        public LlvmBuilder(LlvmBlock block) : this(block, LLVM.CreateBuilder())
         {
             //
         }
@@ -30,7 +30,7 @@ namespace Ion.IR.Target
         public void PositionAtEnd()
         {
             // Position the source builder at the end.
-            LLVM.PositionBuilderAtEnd(this.source, this.Block.Unwrap());
+            LLVM.PositionBuilderAtEnd(this.reference, this.Block.Unwrap());
         }
 
         public LlvmInst GetFirstInstruction()
@@ -54,7 +54,7 @@ namespace Ion.IR.Target
             if (this.HasInstructions)
             {
                 // Position builder before the first instruction.
-                LLVM.PositionBuilderBefore(this.source, this.GetFirstInstruction().Unwrap());
+                LLVM.PositionBuilderBefore(this.reference, this.GetFirstInstruction().Unwrap());
             }
 
             // No instructions exist, position at end.
@@ -63,7 +63,7 @@ namespace Ion.IR.Target
 
         public void PositionAt(LlvmInst instruction)
         {
-            LLVM.PositionBuilder(this.source, this.Block.Unwrap(), instruction.Unwrap());
+            LLVM.PositionBuilder(this.reference, this.Block.Unwrap(), instruction.Unwrap());
         }
 
         public void InsertInstruction(LlvmInst instruction)
@@ -72,22 +72,37 @@ namespace Ion.IR.Target
             this.instructions.Add(instruction);
 
             // Append the instruction to the source builder.
-            LLVM.InsertIntoBuilder(this.source, instruction.Unwrap());
+            LLVM.InsertIntoBuilder(this.reference, instruction.Unwrap());
         }
 
         public LlvmValue CreateAdd(LlvmValue leftSide, LlvmValue rightSide, string resultIdentifier)
         {
             // Invoke the native function and capture the resulting reference.
-            LLVMValueRef reference = LLVM.BuildAdd(this.source, leftSide.Unwrap(), rightSide.Unwrap(), resultIdentifier);
+            LLVMValueRef reference = LLVM.BuildAdd(this.reference, leftSide.Unwrap(), rightSide.Unwrap(), resultIdentifier);
 
             // Wrap and return the reference.
             return new LlvmValue(reference);
         }
 
+        public LlvmValue CreateCall(LlvmFunction function, string resultIdentifier, LlvmValue[] arguments)
+        {
+            // Invoke the native function and capture the resulting reference.
+            LLVMValueRef reference = LLVM.BuildCall(this.reference, function.Unwrap(), arguments.Unwrap(), resultIdentifier);
+
+            // Wrap and return the reference.
+            return new LlvmValue(reference);
+        }
+
+        public LlvmValue CreateCall(LlvmFunction function, string resultIdentifier)
+        {
+            // Delegate to the main handler with zero arguments.
+            return this.CreateCall(function, resultIdentifier, new LlvmValue[] { });
+        }
+
         public LlvmValue CreateReturn(LlvmValue value)
         {
             // Invoke the native function and capture the resulting reference.
-            LLVMValueRef reference = LLVM.BuildRet(this.source, value.Unwrap());
+            LLVMValueRef reference = LLVM.BuildRet(this.reference, value.Unwrap());
 
             // Wrap and return the reference.
             return new LlvmValue(reference);
@@ -96,7 +111,7 @@ namespace Ion.IR.Target
         public LlvmValue CreateReturnVoid()
         {
             // Invoke the native function and capture the resulting reference.
-            LLVMValueRef reference = LLVM.BuildRetVoid(this.source);
+            LLVMValueRef reference = LLVM.BuildRetVoid(this.reference);
 
             // Wrap and return the reference.
             return new LlvmValue(reference);
@@ -104,7 +119,7 @@ namespace Ion.IR.Target
 
         public void Dispose()
         {
-            LLVM.DisposeBuilder(this.source);
+            LLVM.DisposeBuilder(this.reference);
         }
     }
 }

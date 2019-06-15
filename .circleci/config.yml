@@ -6,6 +6,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Process Git submodules
+          command:
+            git submodule init && git submodule update
+      - run:
           name: Restore packages
           command:
             dotnet restore

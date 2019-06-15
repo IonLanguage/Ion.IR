@@ -10,14 +10,10 @@ jobs:
           command:
             dotnet restore
       - run:
-          name: Build core library
+          name: Build project
           command:
-            dotnet build ./IonIR
-      - run:
-          name: Build tests
-          command:
-            dotnet build ./IonIR.Tests
+            dotnet build
       - run:
           name: Run tests
           command:
-            dotnet test ./IonIR.Tests
+            dotnet test

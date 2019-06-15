@@ -1,4 +1,7 @@
+#nullable enable
+
 using System.Collections.Generic;
+using Ion.IR.Constants;
 using Ion.IR.Constructs;
 
 namespace Ion.IR.Generation
@@ -8,6 +11,12 @@ namespace Ion.IR.Generation
         public string Name { get; set; }
 
         public List<IConstruct> Inputs { get; set; }
+
+        public InstructionBuilder()
+        {
+            this.Name = SpecialName.Unknown;
+            this.Inputs = new List<IConstruct>();
+        }
 
         public Instruction Build()
         {

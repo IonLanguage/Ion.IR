@@ -25,6 +25,18 @@ namespace Ion.IR.Target
             return this.Run(new LLVMGenericValueRef[] { });
         }
 
+        public ExitCode RunAsEntry(string[] arguments)
+        {
+            // Delegate to the parent's execution engine.
+            return this.Parent.ExecutionEngine.RunFunctionAsEntry(this, arguments);
+        }
+
+        public ExitCode RunAsEntry()
+        {
+            // Delegate to the main handler with zero arguments.
+            return this.RunAsEntry(new string[] { });
+        }
+
         public bool Verify()
         {
             // TODO: Implement.

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using LLVMSharp;
@@ -5,19 +6,19 @@ using LLVMSharp;
 namespace Ion.IR.Target
 {
 
-    public class Builder : LlvmWrapper<LLVMBuilderRef>
+    public class Builder : LlvmWrapper<LLVMBuilderRef>, IDisposable
     {
         public LlvmBlock Block { get; }
 
         public bool HasInstructions => this.GetFirstInstruction() != null;
 
-        public ReadOnlyCollection<Inst> Instructions => this.instructions.AsReadOnly();
+        public ReadOnlyCollection<LlvmInst> Instructions => this.instructions.AsReadOnly();
 
-        protected readonly List<Inst> instructions;
+        protected readonly List<LlvmInst> instructions;
 
         public Builder(LlvmBlock block, LLVMBuilderRef source) : base(source)
         {
-            this.instructions = new List<Inst>();
+            this.instructions = new List<LlvmInst>();
             this.PositionAtEnd();
         }
 
@@ -32,7 +33,7 @@ namespace Ion.IR.Target
             LLVM.PositionBuilderAtEnd(this.source, this.Block.Unwrap());
         }
 
-        public Inst GetFirstInstruction()
+        public LlvmInst GetFirstInstruction()
         {
             // Attempt to retrieve the first instruction.
             LLVMValueRef firstInstruction = LLVM.GetFirstInstruction(this.Block.Unwrap());
@@ -44,7 +45,7 @@ namespace Ion.IR.Target
             }
 
             // Create and return an instruction wrapper instance.
-            return new Inst(firstInstruction);
+            return new LlvmInst(firstInstruction);
         }
 
         public void PositionAtStart()
@@ -60,13 +61,50 @@ namespace Ion.IR.Target
             this.PositionAtEnd();
         }
 
-        public void InsertInstruction(Inst instruction)
+        public void PositionAt(LlvmInst instruction)
+        {
+            LLVM.PositionBuilder(this.source, this.Block.Unwrap(), instruction.Unwrap());
+        }
+
+        public void InsertInstruction(LlvmInst instruction)
         {
             // Register the instruction locally.
             this.instructions.Add(instruction);
 
             // Append the instruction to the source builder.
             LLVM.InsertIntoBuilder(this.source, instruction.Unwrap());
+        }
+
+        public LlvmValue CreateAdd(LlvmValue leftSide, LlvmValue rightSide, string resultIdentifier)
+        {
+            // Invoke the native function and capture the resulting reference.
+            LLVMValueRef reference = LLVM.BuildAdd(this.source, leftSide.Unwrap(), rightSide.Unwrap(), resultIdentifier);
+
+            // Wrap and return the reference.
+            return new LlvmValue(reference);
+        }
+
+        public LlvmValue CreateReturn(LlvmValue value)
+        {
+            // Invoke the native function and capture the resulting reference.
+            LLVMValueRef reference = LLVM.BuildRet(this.source, value.Unwrap());
+
+            // Wrap and return the reference.
+            return new LlvmValue(reference);
+        }
+
+        public LlvmValue CreateReturnVoid()
+        {
+            // Invoke the native function and capture the resulting reference.
+            LLVMValueRef reference = LLVM.BuildRetVoid(this.source);
+
+            // Wrap and return the reference.
+            return new LlvmValue(reference);
+        }
+
+        public void Dispose()
+        {
+            LLVM.DisposeBuilder(this.source);
         }
     }
 }

@@ -1,8 +1,9 @@
+using System;
 using LLVMSharp;
 
 namespace Ion.IR.Target
 {
-    public class LlvmExecutionEngine : LlvmWrapper<LLVMExecutionEngineRef>
+    public class LlvmExecutionEngine : LlvmWrapper<LLVMExecutionEngineRef>, IDisposable
     {
         public LlvmExecutionEngine(LLVMExecutionEngineRef source) : base(source)
         {
@@ -37,6 +38,11 @@ namespace Ion.IR.Target
         {
             // Delegate to the main handler with zero arguments.
             return this.RunFunctionAsEntry(function, new string[] { });
+        }
+
+        public void Dispose()
+        {
+            LLVM.DisposeExecutionEngine(this.source);
         }
     }
 }

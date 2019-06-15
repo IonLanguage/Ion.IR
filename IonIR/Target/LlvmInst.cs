@@ -2,9 +2,9 @@ using LLVMSharp;
 
 namespace Ion.IR.Target
 {
-    public class Inst : LlvmWrapper<LLVMValueRef>
+    public class LlvmInst : LlvmWrapper<LLVMValueRef>
     {
-        public Inst(LLVMValueRef source) : base(source)
+        public LlvmInst(LLVMValueRef source) : base(source)
         {
             //
         }

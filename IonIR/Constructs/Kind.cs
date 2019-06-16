@@ -1,4 +1,6 @@
+using System;
 using Ion.IR.Constants;
+using Ion.IR.Target;
 
 namespace Ion.IR.Constructs
 {
@@ -29,6 +31,12 @@ namespace Ion.IR.Constructs
 
             // Return the result.
             return result;
+        }
+
+        public LlvmType AsLlvmType()
+        {
+            // TODO: Implement.
+            throw new NotImplementedException();
         }
     }
 }

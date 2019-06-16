@@ -1,3 +1,6 @@
+using System;
+using Ion.IR.Target;
+
 namespace Ion.IR.Constructs
 {
     public class Value : Construct
@@ -18,6 +21,12 @@ namespace Ion.IR.Constructs
         {
             // TODO: Hard-coded symbols.
             return $"({this.Kind.Emit()}){this.Content}";
+        }
+
+        public LlvmValue AsLlvmValue()
+        {
+            // TODO: Implement.
+            throw new NotImplementedException();
         }
     }
 }

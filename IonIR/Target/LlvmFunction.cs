@@ -1,9 +1,10 @@
 using System;
+using Ion.Engine.Tracking;
 using LLVMSharp;
 
 namespace Ion.IR.Target
 {
-    public class LlvmFunction : LlvmWrapper<LLVMValueRef>, IVerifiable
+    public class LlvmFunction : LlvmValue, IVerifiable
     {
         public LlvmModule Parent { get; }
 

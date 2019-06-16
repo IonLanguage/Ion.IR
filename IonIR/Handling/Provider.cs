@@ -19,8 +19,6 @@ namespace Ion.IR.Handling
         public LlvmModule Module { get; set; }
 
         public NoticeJar ErrorJar { get; set; }
-
-        public IrSymbolTable SymbolTable { get; set; }
     }
 
     public class Provider<T>
@@ -31,7 +29,7 @@ namespace Ion.IR.Handling
 
         public NoticeJar ErrorJar { get; }
 
-        public IrSymbolTable SymbolTable { get; }
+        public IrSymbolTable SymbolTable => this.Module.SymbolTable;
 
         public Provider(ProviderOptions<T> options)
         {
@@ -43,7 +41,6 @@ namespace Ion.IR.Handling
 
             this.Target = options.Target;
             this.Module = options.Module;
-            this.SymbolTable = options.SymbolTable ?? new IrSymbolTable(this.Module);
             this.ErrorJar = options.ErrorJar ?? new NoticeJar();
         }
 

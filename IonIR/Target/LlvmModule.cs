@@ -7,6 +7,8 @@ namespace Ion.IR.Target
 {
     public class LlvmModule : LlvmWrapper<LLVMModuleRef>, IVerifiable, IDisposable
     {
+        public IrSymbolTable SymbolTable { get; }
+
         public LlvmExecutionEngine ExecutionEngine { get; }
 
         protected readonly Dictionary<string, LlvmFunction> functions;
@@ -15,6 +17,7 @@ namespace Ion.IR.Target
         {
             this.functions = new Dictionary<string, LlvmFunction>();
             this.ExecutionEngine = this.CreateExecutionEngine();
+            this.SymbolTable = new IrSymbolTable(this);
         }
 
         public void SetIdentifier(string identifier)

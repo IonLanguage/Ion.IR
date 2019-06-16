@@ -1,16 +1,21 @@
 using System;
+using Ion.Engine.Tracking;
 using LLVMSharp;
 
 namespace Ion.IR.Target
 {
-    public class LlvmFunction : LlvmWrapper<LLVMValueRef>, IVerifiable
+    public class LlvmFunction : LlvmWrapper<LLVMValueRef>, IVerifiable, INamed
     {
+        public string Identifier { get; }
+
         public LlvmModule Parent { get; }
 
         public LlvmFunction(LlvmModule parent, LLVMValueRef source) : base(source)
         {
             // TODO: Need to verify source is a function.
             this.Parent = parent;
+
+            this.Identifier = LLVM.GetValueName(source);
         }
 
         public LLVMGenericValueRef Run(LLVMGenericValueRef[] arguments)

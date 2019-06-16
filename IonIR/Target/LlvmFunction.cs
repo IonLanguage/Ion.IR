@@ -20,7 +20,7 @@ namespace Ion.IR.Target
             // Retrieve, wrap and convert blocks to a dictionary.
             this.blocks = LLVM.GetBasicBlocks(this.reference)
                 .Wrap<LlvmBlock, LLVMBasicBlockRef>()
-                .ToDic<LlvmBlock>();
+                .ToDictionary<LlvmBlock>();
         }
 
         public LLVMGenericValueRef Run(LLVMGenericValueRef[] arguments)

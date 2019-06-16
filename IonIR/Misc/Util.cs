@@ -30,12 +30,9 @@ namespace Ion.IR.Target
             return buffer.ToArray();
         }
 
-        public static Dictionary<string, T> ToDic<T>(this T[] values) where T : INamed
+        public static Dictionary<string, T> ToDictionary<T>(this T[] values) where T : INamed
         {
-            return values.ToDictionary<string, T>((INamed value) =>
-            {
-                return value.Name;
-            });
+            return values.ToDictionary((value) => value.Name);
         }
 
         public static T[] Unwrap<T>(this IWrapper<T>[] values)

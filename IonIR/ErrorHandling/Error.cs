@@ -1,12 +1,12 @@
 namespace Ion.IR.ErrorHandling
 {
-    public class Error
+    public class Error : Notice
     {
-        public string Message { get; }
+        public override NoticeType Type => NoticeType.Error;
 
-        public Error(string message)
+        public Error(string message) : base(message)
         {
-            this.Message = message;
+            //
         }
     }
 }

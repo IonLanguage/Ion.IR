@@ -14,7 +14,7 @@ namespace Ion.IR.Target
         }
 
         // TODO: Needs unit testing. Might not be able to cast TWrapper (because of constructor params).
-        public static TWrapper[] Wrap<TWrapper, TValue>(this TValue[] values) where TWrapper : LlvmWrapper<TValue>
+        public static TWrapper[] Wrap<TWrapper, TValue>(this TValue[] values, Func<TValue, TWrapper> callback) where TWrapper : LlvmWrapper<TValue>
         {
             // Create the buffer list.
             List<TWrapper> buffer = new List<TWrapper>();
@@ -22,8 +22,8 @@ namespace Ion.IR.Target
             // Loop through all values.
             foreach (TValue value in values)
             {
-                // Wrap and append value to the buffer list.
-                buffer.Add((TWrapper)new LlvmWrapper<TValue>(value));
+                // Invoke the callback and append to the buffer list.
+                buffer.Add(callback(value));
             }
 
             // Return the buffer list as an array.

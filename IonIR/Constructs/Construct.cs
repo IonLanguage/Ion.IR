@@ -1,3 +1,5 @@
+using Ion.IR.Misc;
+
 namespace Ion.IR.Constructs
 {
     public interface IConstruct
@@ -7,7 +9,7 @@ namespace Ion.IR.Constructs
         string Emit();
     }
 
-    public abstract class Construct : IConstruct
+    public abstract class Construct : Taggable, IConstruct
     {
         public abstract ConstructType ConstructType { get; }
 

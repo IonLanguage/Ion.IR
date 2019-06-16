@@ -6,7 +6,7 @@ namespace Ion.IR.Target
 {
     public static class LlvmUtil
     {
-        public static bool IsNull(IntPtr pointer)
+        public static bool IsPointerNull(IntPtr pointer)
         {
             return pointer == IntPtr.Zero;
         }

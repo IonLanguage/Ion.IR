@@ -7,7 +7,7 @@ namespace Ion.IR.Target
 
     public abstract class LlvmWrapper<T> : IWrapper<T>
     {
-        protected readonly T reference;
+        protected T reference;
 
         public LlvmWrapper(T source)
         {

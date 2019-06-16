@@ -53,7 +53,7 @@ namespace Ion.IR.Target
 
         public void AddFunction(LlvmFunction function)
         {
-            this.functions.Add(function.Identifier, function);
+            this.functions.Add(function.Name, function);
         }
 
         public LlvmFunction GetFunction(string identifier)

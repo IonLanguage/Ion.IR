@@ -5,17 +5,17 @@ namespace Ion.IR.Instructions
 {
     public class CreateInstruction : Instruction
     {
-        public string Identifier { get; }
+        public string ResultIdentifier { get; }
 
         public Kind Kind { get; }
 
-        public CreateInstruction(string identifier, Kind kind) : base(InstructionName.Create, new IConstruct[]
+        public CreateInstruction(string resultIdentifier, Kind kind) : base(InstructionName.Create, new IConstruct[]
         {
-            new Reference(identifier),
+            new Reference(resultIdentifier),
             kind
         })
         {
-            this.Identifier = identifier;
+            this.ResultIdentifier = resultIdentifier;
             this.Kind = kind;
         }
     }

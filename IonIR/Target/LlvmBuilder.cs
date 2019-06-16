@@ -39,7 +39,7 @@ namespace Ion.IR.Target
             LLVMValueRef firstInstruction = LLVM.GetFirstInstruction(this.Block.Unwrap());
 
             // No instructions.
-            if (LlvmUtil.IsNull(firstInstruction.Pointer))
+            if (LlvmUtil.IsPointerNull(firstInstruction.Pointer))
             {
                 return null;
             }
@@ -79,6 +79,18 @@ namespace Ion.IR.Target
         {
             // Invoke the native function and capture the resulting reference.
             LLVMValueRef reference = LLVM.BuildAdd(this.reference, leftSide.Unwrap(), rightSide.Unwrap(), resultIdentifier);
+
+            // Register the instruction.
+            this.instructions.Add(new LlvmInst(reference));
+
+            // Wrap and return the reference.
+            return new LlvmValue(reference);
+        }
+
+        public LlvmValue CreateAlloca(LlvmType type, string resultIdentifier)
+        {
+            // Invoke the native function and capture the resulting reference.
+            LLVMValueRef reference = LLVM.BuildAlloca(this.reference, type.Unwrap(), resultIdentifier);
 
             // Register the instruction.
             this.instructions.Add(new LlvmInst(reference));

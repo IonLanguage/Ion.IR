@@ -6,11 +6,14 @@ using Ion.Engine.Misc;
 using Ion.IR.Constructs;
 using Ion.IR.Misc;
 using Ion.IR.Syntax;
+using LLVMSharp;
 
 namespace Ion.IR.Constants
 {
     public static class TokenConstants
     {
+        public delegate LLVMTypeRef LlvmTypeGenerator();
+
         public static Dictionary<string, KindType> kindTypeMap = new Dictionary<string, KindType>
         {
             {KindName.Void, KindType.Void},
@@ -22,6 +25,17 @@ namespace Ion.IR.Constants
             {KindName.Integer128, KindType.Integer128}
 
             // TODO: Missing float(s) and double(s).
+        };
+
+        public static Dictionary<KindType, LlvmTypeGenerator> kindGenerationMap = new Dictionary<KindType, LlvmTypeGenerator>
+        {
+            {KindType.Void, LLVM.VoidType},
+            {KindType.Boolean, LLVM.Int1Type},
+            {KindType.Integer8, LLVM.Int8Type},
+            {KindType.Integer16, LLVM.Int16Type},
+            {KindType.Integer32, LLVM.Int32Type},
+            {KindType.Integer64, LLVM.Int64Type},
+            {KindType.Integer128, LLVM.Int128Type}
         };
 
         public static Dictionary<string, TokenType> symbols = new Dictionary<string, TokenType>

@@ -18,7 +18,7 @@ namespace Ion.IR.Misc
 
         public override string ToString()
         {
-            return this.builder.ToString();
+            return this.builder.ToString().Trim();
         }
     }
 }

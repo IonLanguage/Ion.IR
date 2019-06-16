@@ -36,8 +36,8 @@ namespace Ion.IR.Constructs
                 builder.Append(instruction.Emit());
             }
 
-            // Trim and return the resulting string.
-            return builder.ToString().Trim();
+            // Return the resulting string.
+            return builder.ToString();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Ion.IR.Target
 
         protected readonly List<LlvmInst> instructions;
 
-        public LlvmBuilder(LlvmBlock block, LLVMBuilderRef source) : base(source)
+        public LlvmBuilder(LlvmBlock block, LLVMBuilderRef reference) : base(reference)
         {
             this.instructions = new List<LlvmInst>();
             this.PositionAtEnd();
@@ -29,7 +29,7 @@ namespace Ion.IR.Target
 
         public void PositionAtEnd()
         {
-            // Position the source builder at the end.
+            // Position the reference builder at the end.
             LLVM.PositionBuilderAtEnd(this.reference, this.Block.Unwrap());
         }
 
@@ -39,7 +39,7 @@ namespace Ion.IR.Target
             LLVMValueRef firstInstruction = LLVM.GetFirstInstruction(this.Block.Unwrap());
 
             // No instructions.
-            if (LlvmUtil.IsPointerNull(firstInstruction.Pointer))
+            if (Util.IsPointerNull(firstInstruction.Pointer))
             {
                 return null;
             }
@@ -71,7 +71,7 @@ namespace Ion.IR.Target
             // Register the instruction locally.
             this.instructions.Add(instruction);
 
-            // Append the instruction to the source builder.
+            // Append the instruction to the reference builder.
             LLVM.InsertIntoBuilder(this.reference, instruction.Unwrap());
         }
 

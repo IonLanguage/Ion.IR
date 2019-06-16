@@ -13,6 +13,6 @@ namespace Ion.IR.Target
     {
         IntPtr Pointer { get; }
 
-        public bool IsNull => LlvmUtil.IsPointerNull(this.Pointer);
+        public bool IsNull => Util.IsPointerNull(this.Pointer);
     }
 }

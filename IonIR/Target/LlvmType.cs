@@ -7,7 +7,7 @@ namespace Ion.IR.Target
     {
         public IntPtr Pointer => this.reference.Pointer;
 
-        public bool IsNull => LlvmUtil.IsPointerNull(this.Pointer);
+        public bool IsNull => Util.IsPointerNull(this.Pointer);
 
         public LlvmType(LLVMTypeRef reference) : base(reference)
         {

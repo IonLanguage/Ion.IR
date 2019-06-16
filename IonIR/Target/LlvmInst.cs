@@ -4,7 +4,7 @@ namespace Ion.IR.Target
 {
     public class LlvmInst : LlvmWrapper<LLVMValueRef>
     {
-        public LlvmInst(LLVMValueRef source) : base(source)
+        public LlvmInst(LLVMValueRef reference) : base(reference)
         {
             //
         }

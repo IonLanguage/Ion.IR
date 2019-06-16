@@ -5,7 +5,7 @@ namespace Ion.IR.Target
 {
     public class LlvmExecutionEngine : LlvmWrapper<LLVMExecutionEngineRef>, IDisposable
     {
-        public LlvmExecutionEngine(LLVMExecutionEngineRef source) : base(source)
+        public LlvmExecutionEngine(LLVMExecutionEngineRef reference) : base(reference)
         {
             //
         }

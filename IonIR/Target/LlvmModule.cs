@@ -13,7 +13,7 @@ namespace Ion.IR.Target
 
         protected readonly Dictionary<string, LlvmFunction> functions;
 
-        public LlvmModule(LLVMModuleRef source) : base(source)
+        public LlvmModule(LLVMModuleRef reference) : base(reference)
         {
             this.functions = new Dictionary<string, LlvmFunction>();
             this.ExecutionEngine = this.CreateExecutionEngine();
@@ -22,7 +22,7 @@ namespace Ion.IR.Target
 
         public void SetIdentifier(string identifier)
         {
-            // Set the source's identifier.
+            // Set the reference's identifier.
             LLVM.SetModuleIdentifier(this.reference, identifier, identifier.Length);
         }
 

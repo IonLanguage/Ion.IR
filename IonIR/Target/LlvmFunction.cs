@@ -1,5 +1,7 @@
+using System.Linq;
 using System;
-using Ion.Engine.Tracking;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using LLVMSharp;
 
 namespace Ion.IR.Target
@@ -8,10 +10,17 @@ namespace Ion.IR.Target
     {
         public LlvmModule Parent { get; }
 
-        public LlvmFunction(LlvmModule parent, LLVMValueRef source) : base(source)
+        protected readonly Dictionary<string, LlvmBlock> blocks;
+
+        public LlvmFunction(LlvmModule parent, LLVMValueRef reference) : base(reference)
         {
-            // TODO: Need to verify source is a function.
+            // TODO: Need to verify reference is a function.
             this.Parent = parent;
+
+            // Retrieve, wrap and convert blocks to a dictionary.
+            this.blocks = LLVM.GetBasicBlocks(this.reference)
+                .Wrap<LlvmBlock, LLVMBasicBlockRef>()
+                .ToDic<LlvmBlock>();
         }
 
         public LLVMGenericValueRef Run(LLVMGenericValueRef[] arguments)
@@ -42,6 +51,15 @@ namespace Ion.IR.Target
         {
             // TODO: Implement.
             throw new NotImplementedException();
+        }
+
+        public LlvmBlock AppendBlock(string name)
+        {
+            // Append the basic block.
+            LLVMBasicBlockRef block = LLVM.AppendBasicBlock(this.reference, name);
+
+            // Wrap and return the reference.
+            return new LlvmBlock(this, block);
         }
     }
 }

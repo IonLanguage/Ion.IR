@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Ion.Engine.Constants;
 using Ion.Engine.Misc;
+using Ion.IR.Constructs;
 using Ion.IR.Misc;
 using Ion.IR.Syntax;
 
@@ -10,6 +11,19 @@ namespace Ion.IR.Constants
 {
     public static class TokenConstants
     {
+        public static Dictionary<string, KindType> kindTypeMap = new Dictionary<string, KindType>
+        {
+            {KindName.Void, KindType.Void},
+            {KindName.Boolean, KindType.Boolean},
+            {KindName.Integer8, KindType.Integer8},
+            {KindName.Integer16, KindType.Integer16},
+            {KindName.Integer32, KindType.Integer32},
+            {KindName.Integer64, KindType.Integer64},
+            {KindName.Integer128, KindType.Integer128}
+
+            // TODO: Missing float(s) and double(s).
+        };
+
         public static Dictionary<string, TokenType> symbols = new Dictionary<string, TokenType>
         {
             {"@", TokenType.SymbolAt},

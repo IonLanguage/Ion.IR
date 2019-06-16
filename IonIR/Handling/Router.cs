@@ -10,6 +10,12 @@ namespace Ion.IR.Handling
 
         public Router(LlvmModule module)
         {
+            // TODO: Ensure T is a derived LlvmWrapper instance.
+            // if (typeof(T) != typeof(LlvmWrapper<object>))
+            // {
+
+            // }
+
             this.module = module;
         }
 

@@ -7,7 +7,7 @@ namespace Ion.IR.Target
         T Unwrap();
     }
 
-    public class LlvmWrapper<T> : IWrapper<T>
+    public abstract class LlvmWrapper<T> : IWrapper<T>
     {
         protected T reference;
 
@@ -16,12 +16,12 @@ namespace Ion.IR.Target
             this.reference = reference;
         }
 
-        public T Unwrap()
+        public virtual T Unwrap()
         {
             return this.reference;
         }
 
-        public Router<T> CreateRouter(LlvmModule module)
+        public virtual Router<T> CreateRouter(LlvmModule module)
         {
             return new Router<T>(module);
         }

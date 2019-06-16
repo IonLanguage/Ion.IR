@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Ion.IR.Handling;
 using LLVMSharp;
 
 namespace Ion.IR.Target
@@ -73,6 +74,11 @@ namespace Ion.IR.Target
 
             // Return whether the verification succeeded.
             return result.Value == 0;
+        }
+
+        public Router<T> CreateRouter<T>()
+        {
+            return new Router<T>(this);
         }
 
         public override string ToString()

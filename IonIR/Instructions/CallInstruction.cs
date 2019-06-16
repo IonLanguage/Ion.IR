@@ -7,11 +7,14 @@ namespace Ion.IR.Instructions
     {
         public string TargetIdentifier { get; }
 
+        public string ResultIdentifier { get; }
+
         public Value[] Arguments { get; }
 
-        public CallInstruction(string targetIdentifier, Value[] arguments) : base(InstructionName.Call, arguments)
+        public CallInstruction(string targetIdentifier, string resultIdentifier, Value[] arguments) : base(InstructionName.Call, arguments)
         {
             this.TargetIdentifier = targetIdentifier;
+            this.ResultIdentifier = resultIdentifier;
             this.Arguments = arguments;
         }
     }

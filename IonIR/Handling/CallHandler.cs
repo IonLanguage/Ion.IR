@@ -22,7 +22,7 @@ namespace Ion.IR.Handling
             LlvmFunction function = provider.SymbolTable.GetFunction(call.TargetIdentifier);
 
             // Create the call.
-            provider.Target.CreateCall(function, call.Name, call.Arguments.AsLlvmValues());
+            provider.Target.CreateCall(function, call.ResultIdentifier, call.Arguments.AsLlvmValues());
         }
     }
 }

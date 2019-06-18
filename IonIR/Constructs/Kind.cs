@@ -1,19 +1,23 @@
 using System;
+using Ion.Engine.Tracking;
 using Ion.IR.Constants;
 using Ion.IR.Target;
 
 namespace Ion.IR.Constructs
 {
-    public class Kind : Construct
+    public class Kind : Construct, INamed
     {
         public override ConstructType ConstructType => ConstructType.Type;
+
+        public KindType Type { get; }
 
         public string Name { get; }
 
         public bool IsPointer { get; }
 
-        public Kind(string name, bool isPointer = false)
+        public Kind(KindType type, string name, bool isPointer = false)
         {
+            this.Type = type;
             this.Name = name;
             this.IsPointer = isPointer;
         }
@@ -35,8 +39,17 @@ namespace Ion.IR.Constructs
 
         public LlvmType AsLlvmType()
         {
-            // TODO: Implement.
-            throw new NotImplementedException();
+            // Create the initial type.
+            LlvmType type = TokenConstants.kindGenerationMap[this.Type]().Wrap();
+
+            // Convert to a pointer if applicable.
+            if (this.IsPointer)
+            {
+                type.ConvertToPointer();
+            }
+
+            // Return the resulting type.
+            return type;
         }
     }
 }

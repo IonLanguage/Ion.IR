@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Ion.IR.Instructions;
 using LLVMSharp;
 
 namespace Ion.IR.Target
@@ -71,13 +72,43 @@ namespace Ion.IR.Target
             LLVM.PositionBuilder(this.reference, this.Block.Unwrap(), instruction.Unwrap());
         }
 
-        public void InsertInstruction(LlvmValue instruction)
+        public void Insert(LlvmValue instruction)
         {
             // Register the instruction locally.
             this.instructions.Add(instruction);
 
             // Append the instruction to the reference builder.
             LLVM.InsertIntoBuilder(this.reference, instruction.Unwrap());
+        }
+
+        public LlvmValue Create(CallInstruction instruction)
+        {
+            // Create and return the instruction.
+            return this.CreateCall(instruction.Target, instruction.ResultIdentifier, instruction.Arguments.AsLlvmValues());
+        }
+
+        public LlvmValue Create(CreateInstruction instruction)
+        {
+            // Create and return the instruction.
+            return this.CreateAlloca(instruction.Kind.AsLlvmType(), instruction.ResultIdentifier);
+        }
+
+        public LlvmValue Create(SetInstruction instruction)
+        {
+            // Create and return the instruction.
+            return this.CreateStore(instruction.Value.AsLlvmValue(), instruction.Target.AsLlvmValue());
+        }
+
+        public LlvmValue CreateStore(LlvmValue value, LlvmValue target)
+        {
+            // Invoke the native function and capture the resulting reference.
+            LLVMValueRef reference = LLVM.BuildStore(this.reference, value.Unwrap(), target.Unwrap());
+
+            // Register the instruction.
+            this.instructions.Add(reference.Wrap());
+
+            // Wrap and return the reference.
+            return new LlvmValue(reference);
         }
 
         public LlvmValue CreateAdd(LlvmValue leftSide, LlvmValue rightSide, string resultIdentifier)

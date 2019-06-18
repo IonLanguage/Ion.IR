@@ -18,14 +18,5 @@ namespace Ion.IR.Instructions
             this.ResultIdentifier = resultIdentifier;
             this.Arguments = arguments;
         }
-
-        public LlvmValue AsLlvmValue()
-        {
-            // Create the builder reference.
-            LlvmBuilder builder = LlvmBuilder.CreateReference();
-
-            // Create and return the call instruction.
-            return builder.CreateCall(this.Target, this.ResultIdentifier, this.Arguments.AsLlvmValues());
-        }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Ion.IR.Constructs
 {
-    public class Instruction : Construct
+    public abstract class Instruction : Construct
     {
         public override ConstructType ConstructType => ConstructType.Instruction;
 

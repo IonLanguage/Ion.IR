@@ -1,4 +1,7 @@
+using System;
+using Ion.IR.Constants;
 using Ion.IR.Constructs;
+using Ion.IR.Instructions;
 using Ion.IR.Target;
 
 namespace Ion.IR.Handling
@@ -13,7 +16,30 @@ namespace Ion.IR.Handling
             // Insert instructions.
             foreach (Instruction instruction in section.Instructions)
             {
-                
+                switch (instruction.Name)
+                {
+                    // Call.
+                    case InstructionName.Call:
+                        {
+                            block.Builder.Create((CallInstruction)instruction);
+
+                            break;
+                        }
+
+                    // Create.
+                    case InstructionName.Create:
+                        {
+                            block.Builder.Create((CreateInstruction)instruction);
+
+                            break;
+                        }
+
+                    // Unrecognized instruction name.
+                    default:
+                        {
+                            throw new Exception($"Unrecognized instruction name: {instruction.Name}");
+                        }
+                }
             }
         }
     }

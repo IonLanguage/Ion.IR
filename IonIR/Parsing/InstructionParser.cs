@@ -39,6 +39,7 @@ namespace Ion.IR.Parsing
             // Skip semi-colon token.
             context.Stream.Skip();
 
+            // TODO: Resolve instructions depending on their types (names).
             // Create the instruction construct.
             Instruction instruction = new Instruction(name, inputs.ToArray());
 

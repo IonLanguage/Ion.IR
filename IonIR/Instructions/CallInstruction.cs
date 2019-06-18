@@ -1,7 +1,6 @@
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
 using Ion.IR.Target;
-using LLVMSharp;
 
 namespace Ion.IR.Instructions
 {
@@ -24,7 +23,7 @@ namespace Ion.IR.Instructions
         {
             // Create the builder reference.
             LlvmBuilder builder = LlvmBuilder.CreateReference();
-            
+
             // Create and return the call instruction.
             return builder.CreateCall(this.Target, this.ResultIdentifier, this.Arguments.AsLlvmValues());
         }

@@ -1,4 +1,5 @@
 using System;
+using Ion.IR.Cognition;
 using Ion.IR.Target;
 
 namespace Ion.IR.Constructs
@@ -25,8 +26,25 @@ namespace Ion.IR.Constructs
 
         public LlvmValue AsLlvmValue()
         {
-            // TODO: Implement.
-            throw new NotImplementedException();
+            // Ensure value is identified as a literal.
+            if (!Recognition.IsLiteral(this.Content))
+            {
+                throw new Exception("Content could not be identified as a valid literal");
+            }
+            // Integer literal.
+            else if (Recognition.IsInteger(this.Content))
+            {
+                return LlvmConstFactory.Int(this.Kind.AsLlvmType(), int.Parse(this.Content));
+            }
+            // String literal.
+            else if (Recognition.IsStringLiteral(this.Content))
+            {
+                return LlvmConstFactory.String(this.Content);
+            }
+            // Unrecognized literal.
+            else {
+                throw new Exception($"Unrecognized literal: {this.Content}");
+            }
         }
     }
 }

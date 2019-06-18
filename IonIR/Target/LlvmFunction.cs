@@ -1,7 +1,5 @@
-using System.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using LLVMSharp;
 
 namespace Ion.IR.Target

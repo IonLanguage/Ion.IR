@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Ion.Engine.Tracking;
 using Ion.IR.Constructs;
+using LLVMSharp;
 
 namespace Ion.IR.Target
 {
@@ -11,6 +12,16 @@ namespace Ion.IR.Target
         public static bool IsPointerNull(IntPtr pointer)
         {
             return pointer == IntPtr.Zero;
+        }
+
+        public static LlvmValue Wrap(this LLVMValueRef reference)
+        {
+            return new LlvmValue(reference);
+        }
+
+        public static LlvmType Wrap(this LLVMTypeRef reference)
+        {
+            return new LlvmType(reference);
         }
 
         // TODO: Needs unit testing. Might not be able to cast TWrapper (because of constructor params).

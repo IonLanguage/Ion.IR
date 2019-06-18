@@ -8,10 +8,13 @@ namespace Ion.IR.Handling
         public override void Handle(Provider<LlvmFunction> provider, Section section)
         {
             // Append the block.
-            provider.Target.AppendBlock(section.Name);
+            LlvmBlock block = provider.Target.AppendBlock(section.Name);
 
-            // Create a builder.
-            // TODO
+            // Insert instructions.
+            foreach (Instruction instruction in section.Instructions)
+            {
+                
+            }
         }
     }
 }

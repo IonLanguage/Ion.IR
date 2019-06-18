@@ -1,21 +1,32 @@
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
+using Ion.IR.Target;
+using LLVMSharp;
 
 namespace Ion.IR.Instructions
 {
     public class CallInstruction : Instruction
     {
-        public string TargetIdentifier { get; }
+        public LlvmFunction Target { get; }
 
         public string ResultIdentifier { get; }
 
         public Value[] Arguments { get; }
 
-        public CallInstruction(string targetIdentifier, string resultIdentifier, Value[] arguments) : base(InstructionName.Call, arguments)
+        public CallInstruction(LlvmFunction target, string resultIdentifier, Value[] arguments) : base(InstructionName.Call, arguments)
         {
-            this.TargetIdentifier = targetIdentifier;
+            this.Target = target;
             this.ResultIdentifier = resultIdentifier;
             this.Arguments = arguments;
+        }
+
+        public LlvmValue AsLlvmValue()
+        {
+            // Create the builder reference.
+            LlvmBuilder builder = LlvmBuilder.CreateReference();
+            
+            // Create and return the call instruction.
+            return builder.CreateCall(this.Target, this.ResultIdentifier, this.Arguments.AsLlvmValues());
         }
     }
 }

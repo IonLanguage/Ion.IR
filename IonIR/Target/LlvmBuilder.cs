@@ -8,17 +8,22 @@ namespace Ion.IR.Target
 
     public class LlvmBuilder : LlvmWrapper<LLVMBuilderRef>, IDisposable
     {
+        public static LlvmBuilder CreateReference()
+        {
+            return new LlvmBuilder(null, LLVM.CreateBuilder());
+        }
+
         public LlvmBlock Block { get; }
 
         public bool HasInstructions => this.GetFirstInstruction() != null;
 
-        public ReadOnlyCollection<LlvmInst> Instructions => this.instructions.AsReadOnly();
+        public ReadOnlyCollection<LlvmValue> Instructions => this.instructions.AsReadOnly();
 
-        protected readonly List<LlvmInst> instructions;
+        protected readonly List<LlvmValue> instructions;
 
         public LlvmBuilder(LlvmBlock block, LLVMBuilderRef reference) : base(reference)
         {
-            this.instructions = new List<LlvmInst>();
+            this.instructions = new List<LlvmValue>();
             this.PositionAtEnd();
         }
 
@@ -33,7 +38,7 @@ namespace Ion.IR.Target
             LLVM.PositionBuilderAtEnd(this.reference, this.Block.Unwrap());
         }
 
-        public LlvmInst GetFirstInstruction()
+        public LlvmValue GetFirstInstruction()
         {
             // Attempt to retrieve the first instruction.
             LLVMValueRef firstInstruction = LLVM.GetFirstInstruction(this.Block.Unwrap());
@@ -45,7 +50,7 @@ namespace Ion.IR.Target
             }
 
             // Create and return an instruction wrapper instance.
-            return new LlvmInst(firstInstruction);
+            return firstInstruction.Wrap();
         }
 
         public void PositionAtStart()
@@ -61,12 +66,12 @@ namespace Ion.IR.Target
             this.PositionAtEnd();
         }
 
-        public void PositionAt(LlvmInst instruction)
+        public void PositionAt(LlvmValue instruction)
         {
             LLVM.PositionBuilder(this.reference, this.Block.Unwrap(), instruction.Unwrap());
         }
 
-        public void InsertInstruction(LlvmInst instruction)
+        public void InsertInstruction(LlvmValue instruction)
         {
             // Register the instruction locally.
             this.instructions.Add(instruction);
@@ -81,7 +86,7 @@ namespace Ion.IR.Target
             LLVMValueRef reference = LLVM.BuildAdd(this.reference, leftSide.Unwrap(), rightSide.Unwrap(), resultIdentifier);
 
             // Register the instruction.
-            this.instructions.Add(new LlvmInst(reference));
+            this.instructions.Add(reference.Wrap());
 
             // Wrap and return the reference.
             return new LlvmValue(reference);
@@ -93,7 +98,7 @@ namespace Ion.IR.Target
             LLVMValueRef reference = LLVM.BuildAlloca(this.reference, type.Unwrap(), resultIdentifier);
 
             // Register the instruction.
-            this.instructions.Add(new LlvmInst(reference));
+            this.instructions.Add(reference.Wrap());
 
             // Wrap and return the reference.
             return new LlvmValue(reference);
@@ -105,7 +110,7 @@ namespace Ion.IR.Target
             LLVMValueRef reference = LLVM.BuildCall(this.reference, function.Unwrap(), arguments.Unwrap(), resultIdentifier);
 
             // Register the instruction.
-            this.instructions.Add(new LlvmInst(reference));
+            this.instructions.Add(reference.Wrap());
 
             // Wrap and return the reference.
             return new LlvmValue(reference);
@@ -123,7 +128,7 @@ namespace Ion.IR.Target
             LLVMValueRef reference = LLVM.BuildRet(this.reference, value.Unwrap());
 
             // Register the instruction.
-            this.instructions.Add(new LlvmInst(reference));
+            this.instructions.Add(reference.Wrap());
 
             // Wrap and return the reference.
             return new LlvmValue(reference);
@@ -135,7 +140,7 @@ namespace Ion.IR.Target
             LLVMValueRef reference = LLVM.BuildRetVoid(this.reference);
 
             // Register the instruction.
-            this.instructions.Add(new LlvmInst(reference));
+            this.instructions.Add(reference.Wrap());
 
             // Wrap and return the reference.
             return new LlvmValue(reference);

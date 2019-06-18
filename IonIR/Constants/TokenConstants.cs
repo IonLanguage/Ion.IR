@@ -27,6 +27,9 @@ namespace Ion.IR.Constants
             // TODO: Missing float(s) and double(s).
         };
 
+        public static Dictionary<KindType, string> kindReverseTypeMap = TokenConstants.kindTypeMap
+            .ToDictionary((item) => item.Value, (item) => item.Key);
+
         public static Dictionary<KindType, LlvmTypeGenerator> kindGenerationMap = new Dictionary<KindType, LlvmTypeGenerator>
         {
             {KindType.Void, LLVM.VoidType},

@@ -15,11 +15,22 @@ namespace Ion.IR.Constructs
 
         public bool IsPointer { get; }
 
-        public Kind(KindType type, string name, bool isPointer = false)
+        public Kind(KindType type, bool isPointer = false)
         {
+            // Ensure type is regitered in the reverse type map.
+            if (!TokenConstants.kindReverseTypeMap.ContainsKey(type))
+            {
+                throw new Exception($"Unrecognized type: {type}");
+            }
+
             this.Type = type;
-            this.Name = name;
+            this.Name = TokenConstants.kindReverseTypeMap[type];
             this.IsPointer = isPointer;
+        }
+
+        public Kind(string name, bool isPointer = false) : this(TokenConstants.kindTypeMap[name], isPointer)
+        {
+            //
         }
 
         public override string Emit()

@@ -4,7 +4,12 @@ using Ion.IR.Syntax;
 
 namespace Ion.IR.Parsing
 {
-    public class InstructionParser : IParser<Instruction>
+    public interface IInstructionparser<T> : IParser<T> where T : Instruction
+    {
+        //
+    }
+
+    public class InstructionParser : IInstructionparser<Instruction>
     {
         public Instruction Parse(ParserContext context)
         {

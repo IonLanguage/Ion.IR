@@ -12,6 +12,7 @@ namespace Ion.IR.Instructions
 
         public Value[] Arguments { get; }
 
+        // TODO: What about base inputs, ResultIdentifier?
         public CallInstruction(LlvmFunction target, string resultIdentifier, Value[] arguments) : base(InstructionName.Call, arguments)
         {
             this.Target = target;

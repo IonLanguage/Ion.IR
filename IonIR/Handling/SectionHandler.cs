@@ -34,6 +34,14 @@ namespace Ion.IR.Handling
                             break;
                         }
 
+                    // Set.
+                    case InstructionName.Set:
+                        {
+                            block.Builder.Create((SetInstruction)instruction);
+
+                            break;
+                        }
+
                     // Unrecognized instruction name.
                     default:
                         {

@@ -77,5 +77,10 @@ namespace Ion.IR.Target
             // Return the buffer as an array.
             return buffer.ToArray();
         }
+
+        public static Reference AsReference(this string value)
+        {
+            return new Reference(value);
+        }
     }
 }

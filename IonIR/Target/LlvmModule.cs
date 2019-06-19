@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -49,7 +51,7 @@ namespace Ion.IR.Target
 
         public bool ContainsFunction(string identifier)
         {
-            return this.functions.ContainsKey(identifier);
+            return this.functions.ContainsKey(identifier) || this.NativeGetFunction(identifier) != null;
         }
 
         public void AddFunction(LlvmFunction function)
@@ -57,9 +59,48 @@ namespace Ion.IR.Target
             this.functions.Add(function.Name, function);
         }
 
-        public LlvmFunction GetFunction(string identifier)
+        public LlvmFunction? NativeGetFunction(string identifier)
         {
-            return this.functions[identifier];
+            // Attempt to retrieve the function.
+            LLVMValueRef reference = LLVM.GetNamedFunction(this.reference, identifier);
+
+            // If the reference's pointer is null, the function does not exist. Return null.
+            if (Util.IsPointerNull(reference.Pointer))
+            {
+                return null;
+            }
+
+            // Otherwise, wrap and return the reference.
+            return new LlvmFunction(this, reference);
+        }
+
+        public LlvmFunction? GetFunction(string identifier)
+        {
+            // If the function does not exist, return null.
+            if (!this.ContainsFunction(identifier))
+            {
+                return null;
+            }
+            // Function is contained within cache.
+            else if (this.functions.ContainsKey(identifier))
+            {
+                return this.functions[identifier];
+            }
+
+            // Function is not cached, retrieve its reference.
+            LlvmFunction? function = this.NativeGetFunction(identifier);
+
+            // Function must not be null.
+            if (function == null)
+            {
+                throw new Exception("Unexpected function to be null");
+            }
+
+            // Store the function in the cache for future use.
+            this.functions.Add(identifier, function);
+
+            // Return the function.
+            return function;
         }
 
         public void Dispose()

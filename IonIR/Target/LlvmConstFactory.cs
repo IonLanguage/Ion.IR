@@ -5,10 +5,10 @@ namespace Ion.IR.Target
 {
     public static class LlvmConstFactory
     {
-        public static LlvmValue Int(LlvmType type, int value)
+        public static LlvmValue Int(LlvmType type, long value)
         {
             // Create the value. Must be an unsigned integer.
-            uint transformedValue = (uint)Math.Abs(value);
+            ulong transformedValue = (ulong)Math.Abs(value);
 
             // Determine whether to flip to negative or stay in positive.
             bool flip = value < 0;

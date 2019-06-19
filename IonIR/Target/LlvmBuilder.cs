@@ -33,6 +33,10 @@ namespace Ion.IR.Target
             //
         }
 
+        public LlvmBuilder(LLVMBuilderRef reference) : base(reference)
+        {
+        }
+
         public void PositionAtEnd()
         {
             // Position the reference builder at the end.

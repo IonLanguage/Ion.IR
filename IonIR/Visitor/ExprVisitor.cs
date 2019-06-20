@@ -104,9 +104,11 @@ namespace Ion.IR.Visitor
 
         public Expr VisitPrototype(Prototype node)
         {
-            // Make the function type:  double(double,double) etc.
-            var argumentCount = (uint)node.Arguments.Count;
-            var arguments = new LLVMTypeRef[Math.Max(argumentCount, 1)];
+            // Retrieve argument count within node.
+            uint argumentCount = (uint)node.Arguments.Count;
+
+            // Create the argument buffer array.
+            LLVMTypeRef[] arguments = new LLVMTypeRef[Math.Max(argumentCount, 1)];
 
             // Attempt to retrieve an existing function value.
             LlvmFunction? function = this.module.GetFunction(node.Identifier);
@@ -127,6 +129,7 @@ namespace Ion.IR.Visitor
             }
             else
             {
+                // TODO: Wrong type.
                 for (int i = 0; i < argumentCount; ++i)
                 {
                     arguments[i] = LLVM.DoubleType();

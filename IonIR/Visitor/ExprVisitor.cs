@@ -8,6 +8,11 @@ using LLVMSharp;
 
 namespace Ion.IR.Visitor
 {
+    public interface IExprVisitable
+    {
+        Expr Accept(ExprVisitor visitor);
+    }
+
     public abstract class ExprVisitor
     {
         protected readonly Stack<LlvmValue> valueStack = new Stack<LlvmValue>();
@@ -39,7 +44,7 @@ namespace Ion.IR.Visitor
             return node.VisitChildren(this);
         }
 
-        public Expr VisitIntegerExpr(IntegerExpr node)
+        public Expr Visit(IntegerExpr node)
         {
             // Push the node's llvm value to the stack.
             this.valueStack.Push(node.AsLlvmValue());
@@ -48,7 +53,7 @@ namespace Ion.IR.Visitor
             return node;
         }
 
-        public Expr VisitVariableExpr(VariableExpr node)
+        public Expr Visit(VariableExpr node)
         {
             // Create the value buffer.
             LlvmValue value;
@@ -69,7 +74,7 @@ namespace Ion.IR.Visitor
             return node;
         }
 
-        public Expr VisitCallExpr(CallExpr node)
+        public Expr Visit(CallExpr node)
         {
             // Attempt to retrieve the function.
             LlvmFunction? callee = this.module.GetFunction(node.CalleeName);
@@ -102,7 +107,7 @@ namespace Ion.IR.Visitor
             return node;
         }
 
-        public Expr VisitPrototype(Prototype node)
+        public Expr Visit(Prototype node)
         {
             // Retrieve argument count within node.
             uint argumentCount = (uint)node.Arguments.Count;
@@ -166,13 +171,13 @@ namespace Ion.IR.Visitor
             return node;
         }
 
-        public Expr VisitFunction(Function node)
+        public Expr Visit(Function node)
         {
             // Clear named values to reset scope upon processing a new function.
             this.namedValues.Clear();
 
             // Visit the function's prototype.
-            this.Visit(node.Prototype);
+            this.Visit((Expr)node.Prototype);
 
             // Pop the function prototype from the value stack.
             LlvmFunction function = (LlvmFunction)this.valueStack.Pop();
@@ -204,6 +209,31 @@ namespace Ion.IR.Visitor
 
             // Return the node.
             return node;
+        }
+
+        public Expr VisitBinaryExpr(BinaryExpr node)
+        {
+            // Visit left side.
+            this.Visit(node.LeftSide);
+
+            // Visit right side.
+            this.Visit(node.RightSide);
+
+            // Pop right side off the stack.
+            LlvmValue rightSide = this.valueStack.Pop();
+
+            // Pop left side off the stack.
+            LlvmValue leftSide = this.valueStack.Pop();
+
+            // Create a value buffer.
+            LlvmValue binaryExpr;
+
+            switch (node.Type)
+            {
+                case BinaryExprType.Addition: {
+                        binaryExpr = LLVM.
+                }
+            }
         }
     }
 }

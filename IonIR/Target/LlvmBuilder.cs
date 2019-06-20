@@ -139,10 +139,10 @@ namespace Ion.IR.Target
             return new LlvmValue(reference);
         }
 
-        public LlvmValue CreateCall(LlvmFunction function, string resultIdentifier, LlvmValue[] arguments)
+        public LlvmValue CreateCall(LlvmFunction callee, string resultIdentifier, LlvmValue[] arguments)
         {
             // Invoke the native function and capture the resulting reference.
-            LLVMValueRef reference = LLVM.BuildCall(this.reference, function.Unwrap(), arguments.Unwrap(), resultIdentifier);
+            LLVMValueRef reference = LLVM.BuildCall(this.reference, callee.Unwrap(), arguments.Unwrap(), resultIdentifier);
 
             // Register the instruction.
             this.instructions.Add(reference.Wrap());

@@ -54,9 +54,16 @@ namespace Ion.IR.Target
             return this.functions.ContainsKey(identifier) || this.NativeGetFunction(identifier) != null;
         }
 
-        public void AddFunction(LlvmFunction function)
+        public LlvmFunction CreateFunction(string identifier, LlvmType type)
         {
-            this.functions.Add(function.Name, function);
+            // Add and wrap the function.
+            LlvmFunction function = LLVM.AddFunction(this.reference, identifier, type.Unwrap()).Wrap<LlvmFunction>();
+
+            // Cache the function locally.
+            this.functions.Add(identifier, function);
+
+            // Return the function.
+            return function;
         }
 
         public LlvmFunction? NativeGetFunction(string identifier)

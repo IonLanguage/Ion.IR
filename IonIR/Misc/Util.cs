@@ -19,6 +19,15 @@ namespace Ion.IR.Target
             return new LlvmValue(reference);
         }
 
+        public static T Wrap<T>(this LLVMValueRef reference) where T : LlvmWrapper<LLVMValueRef>
+        {
+            // Create the instance.
+            T instance = (T)Activator.CreateInstance(typeof(T), reference);
+
+            // Return the instance.
+            return instance;
+        }
+
         public static LlvmType Wrap(this LLVMTypeRef reference)
         {
             return new LlvmType(reference);

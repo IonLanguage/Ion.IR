@@ -2,8 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using Ion.Engine.Llvm;
 using Ion.Engine.Misc;
-using Ion.IR.Target;
 using LLVMSharp;
 
 namespace Ion.IR.Visitor
@@ -230,7 +230,8 @@ namespace Ion.IR.Visitor
 
             switch (node.Type)
             {
-                case BinaryExprType.Addition: {
+                case BinaryExprType.Addition:
+                    {
                         binaryExpr = LLVM.
                 }
             }

@@ -1,6 +1,6 @@
+using Ion.Engine.Llvm;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
-using Ion.IR.Target;
 
 namespace Ion.IR.Instructions
 {

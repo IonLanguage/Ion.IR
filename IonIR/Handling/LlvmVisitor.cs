@@ -88,7 +88,7 @@ namespace Ion.IR.Handling
             LlvmType returnType = this.typeStack.Pop();
 
             // Emit the function type.
-            LlvmType type = LlvmTypeFactory.Function(returnType, arguments, node.Prototype.Arguments.Continuous);
+            LlvmType type = LlvmFactory.Function(returnType, arguments, node.Prototype.Arguments.Continuous);
 
             // Create the function.
             LlvmFunction function = this.module.CreateFunction(node.Prototype.Identifier, type);
@@ -241,7 +241,7 @@ namespace Ion.IR.Handling
             List<LlvmValue> arguments = new List<LlvmValue>();
 
             // Visit call arguments.
-            foreach (Visitor.Construct argument in node.Arguments)
+            foreach (Construct argument in node.Arguments)
             {
                 this.Visit(argument);
 
@@ -293,8 +293,11 @@ namespace Ion.IR.Handling
                 }
 
                 // TODO: Support for infinite arguments and hard-coded return type.
+                // Create the function type.
+                LlvmType type = LlvmFactory.Function(LlvmFactory.Void(), arguments, false);
+
                 // Create the function within the module.
-                function = this.module.CreateFunction(node.Identifier, LLVM.FunctionType(LLVM.VoidType(), arguments, false).Wrap());
+                function = this.module.CreateFunction(node.Identifier, type);
 
                 // Set the function's linkage.
                 function.SetLinkage(LLVMLinkage.LLVMExternalLinkage);
@@ -378,16 +381,13 @@ namespace Ion.IR.Handling
             LlvmValue leftSide = this.valueStack.Pop();
 
             // Create a value buffer.
-            LlvmValue binaryExpr;
+            LlvmValue binaryExpr = this.builder.CreateAdd(leftSide, rightSide, node.ResultIdentifier);
 
-            // TODO: Finish implementing.
-            switch (node.Type)
-            {
-                case BinaryExprType.Addition:
-                    {
-                        binaryExpr = LLVM.
-                }
-            }
+            // Push the resulting value onto the stack.
+            this.valueStack.Push(binaryExpr);
+
+            // Return the node.
+            return node;
         }
     }
 }

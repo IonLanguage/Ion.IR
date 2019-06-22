@@ -20,13 +20,15 @@ namespace Ion.IR.Visitor
     {
         public override ConstructType ConstructType => ConstructType.BinaryExpr;
 
+        public string ResultIdentifier { get; }
+
         public Construct LeftSide { get; }
 
         public Construct RightSide { get; }
 
         public BinaryExprType Type { get; }
 
-        public BinaryExpr(char operation, Construct leftSide, Construct rightSide)
+        public BinaryExpr(char operation, Construct leftSide, Construct rightSide, string resultIdentifier)
         {
             // Attempt to identify operation and mark as own expression type.
             switch (operation)
@@ -72,6 +74,7 @@ namespace Ion.IR.Visitor
                     }
             }
 
+            this.ResultIdentifier = resultIdentifier;
             this.LeftSide = leftSide;
             this.RightSide = rightSide;
         }

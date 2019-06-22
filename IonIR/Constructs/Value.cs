@@ -34,12 +34,12 @@ namespace Ion.IR.Constructs
             // Integer literal.
             else if (Recognition.IsInteger(this.Content))
             {
-                return LlvmConstFactory.Int(this.Kind.AsLlvmType(), int.Parse(this.Content));
+                return LlvmFactory.Int(this.Kind.AsLlvmType(), int.Parse(this.Content));
             }
             // String literal.
             else if (Recognition.IsStringLiteral(this.Content))
             {
-                return LlvmConstFactory.String(this.Content);
+                return LlvmFactory.String(this.Content);
             }
             // Unrecognized literal.
             else

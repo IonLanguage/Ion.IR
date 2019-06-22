@@ -73,7 +73,7 @@ namespace Ion.IR.Handling
                 throw new Exception("Unexpected function prototype to be null");
             }
             // Ensure that body returns a value if applicable.
-            else if (!node.Prototype.ReturnType.IsVoid && !node.Body.HasReturnExpr)
+            else if (!node.Prototype.ReturnKind.IsVoid && !node.Body.HasReturnExpr)
             {
                 throw new Exception("Functions that do not return void must return a value");
             }
@@ -82,7 +82,7 @@ namespace Ion.IR.Handling
             LlvmType[] arguments = node.Prototype.Arguments.Emit(context);
 
             // Visit the return type node.
-            this.Visit(node.Prototype.ReturnType);
+            this.Visit(node.Prototype.ReturnKind);
 
             // Pop off the return type off the stack.
             LlvmType returnType = this.typeStack.Pop();
@@ -97,13 +97,13 @@ namespace Ion.IR.Handling
             uint argumentIndexCounter = 0;
 
             // Name arguments.
-            foreach (FormalArg formalArgument in node.Prototype.Arguments.Values)
+            foreach ((Kind kind, Reference reference) in node.Prototype.Arguments)
             {
                 // Retrieve the argument.
                 LlvmValue argument = function.GetArgumentAt(argumentIndexCounter);
 
                 // Name the argument.
-                argument.SetName(formalArgument.Identifier);
+                argument.SetName(reference.Value);
 
                 // Increment the index counter for next iteration.
                 argumentIndexCounter++;

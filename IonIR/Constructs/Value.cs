@@ -1,6 +1,6 @@
 using System;
+using Ion.Engine.Llvm;
 using Ion.IR.Cognition;
-using Ion.IR.Target;
 
 namespace Ion.IR.Constructs
 {
@@ -18,10 +18,10 @@ namespace Ion.IR.Constructs
             this.Content = content;
         }
 
-        public override string Emit()
+        public override string ToString()
         {
             // TODO: Hard-coded symbols.
-            return $"({this.Kind.Emit()}){this.Content}";
+            return $"({this.Kind.ToString()}){this.Content}";
         }
 
         public LlvmValue AsLlvmValue()
@@ -42,7 +42,8 @@ namespace Ion.IR.Constructs
                 return LlvmConstFactory.String(this.Content);
             }
             // Unrecognized literal.
-            else {
+            else
+            {
                 throw new Exception($"Unrecognized literal: {this.Content}");
             }
         }

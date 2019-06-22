@@ -1,3 +1,4 @@
+using Ion.IR.Handling;
 using Ion.IR.Misc;
 
 namespace Ion.IR.Constructs
@@ -5,19 +6,22 @@ namespace Ion.IR.Constructs
     public interface IConstruct
     {
         ConstructType ConstructType { get; }
-
-        string Emit();
     }
 
-    public abstract class Construct : Taggable, IConstruct
+    public abstract class Construct : Taggable, IVisitable<Construct, LlvmVisitor>
     {
         public abstract ConstructType ConstructType { get; }
 
-        public abstract string Emit();
+        public override abstract string ToString();
 
-        public override string ToString()
+        public virtual Construct Accept(LlvmVisitor visitor)
         {
-            return this.Emit();
+            return visitor.VisitExtension(this);
+        }
+
+        public virtual Construct VisitChildren(LlvmVisitor visitor)
+        {
+            return visitor.Visit(this);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Ion.IR.Constructs;
 
 namespace Ion.IR.Visitor
 {
@@ -15,17 +16,17 @@ namespace Ion.IR.Visitor
         LessThan
     }
 
-    public class BinaryExpr : Expr, IExprVisitable
+    public class BinaryExpr : Construct
     {
-        public Expr LeftSide { get; }
+        public override ConstructType ConstructType => ConstructType.BinaryExpr;
 
-        public Expr RightSide { get; }
+        public Construct LeftSide { get; }
+
+        public Construct RightSide { get; }
 
         public BinaryExprType Type { get; }
 
-        public override ExprType ExprType => ExprType.Binary;
-
-        public BinaryExpr(char operation, Expr leftSide, Expr rightSide)
+        public BinaryExpr(char operation, Construct leftSide, Construct rightSide)
         {
             // Attempt to identify operation and mark as own expression type.
             switch (operation)
@@ -75,9 +76,10 @@ namespace Ion.IR.Visitor
             this.RightSide = rightSide;
         }
 
-        public override Expr Accept(ExprVisitor visitor)
+        public override string ToString()
         {
-            return visitor.Visit(this);
+            // TODO: Implement.
+            throw new NotImplementedException();
         }
     }
 }

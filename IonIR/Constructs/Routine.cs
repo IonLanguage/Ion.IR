@@ -43,7 +43,7 @@ namespace Ion.IR.Constructs
             this.Sections = options.Sections;
         }
 
-        public override string Emit()
+        public override string ToString()
         {
             // Create a new fixed string builder instance.
             FixedStringBuilder builder = new FixedStringBuilder();
@@ -55,7 +55,7 @@ namespace Ion.IR.Constructs
             foreach ((Kind kind, Reference reference) in this.Args)
             {
                 // Emit argument and store in the buffer.
-                argsBuffer.Add($"{kind.Emit()} {reference.Emit()}");
+                argsBuffer.Add($"{kind.ToString()} {reference.ToString()}");
             }
 
             // Convert buffer to an array.
@@ -67,13 +67,13 @@ namespace Ion.IR.Constructs
 
             // TODO: Same hard-coded for parentheses.
             // Append the routine's header.
-            builder.Append($"{this.ReturnKind.Emit()} {Symbol.RoutinePrefix}{this.Name}({args})");
+            builder.Append($"{this.ReturnKind.ToString()} {Symbol.RoutinePrefix}{this.Name}({args})");
 
             // Emit sections.
             foreach (Section section in this.Sections)
             {
                 // Emit and append the section.
-                builder.Append(section.Emit());
+                builder.Append(section.ToString());
             }
 
             // Trim and return the resulting string.

@@ -8,7 +8,9 @@ namespace Ion.IR.Parsing
         public void SubParse(string name, IConstruct[] inputs)
         {
             // Create the call instruction.
-            CallInstruction call = new CallInstruction();
+            CallInst call = new CallInst();
+
+            // TODO: Finish implementation.
         }
     }
 }

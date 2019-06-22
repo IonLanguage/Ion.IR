@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ion.IR.Constructs
 {
@@ -21,7 +23,7 @@ namespace Ion.IR.Constructs
             //
         }
 
-        public override string Emit()
+        public override string ToString()
         {
             // Create the cells buffer list.
             List<string> cells = new List<string>();
@@ -33,11 +35,29 @@ namespace Ion.IR.Constructs
             foreach (IConstruct input in this.Inputs)
             {
                 // Emit and append the argument.
-                cells.Add(input.Emit());
+                cells.Add(input.ToString());
             }
 
             // Join cells onto the resulting string, separated by a space.
             return string.Join(" ", cells);
+        }
+
+        public IConstruct[] GetRange(int from, int amount)
+        {
+            return this.Inputs.Skip(from).Take(amount).ToArray();
+        }
+
+        public IConstruct[] GetFrom(int from)
+        {
+            return this.Inputs.Skip(from).ToArray();
+        }
+
+        public void VerifyArgumentCount(uint count)
+        {
+            if (this.Inputs.Length != count)
+            {
+                throw new Exception($"Expected {count} inputs but got {this.Inputs.Length}");
+            }
         }
     }
 }

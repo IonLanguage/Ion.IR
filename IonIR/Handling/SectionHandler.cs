@@ -1,8 +1,8 @@
 using System;
+using Ion.Engine.Llvm;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
 using Ion.IR.Instructions;
-using Ion.IR.Target;
 
 namespace Ion.IR.Handling
 {
@@ -21,7 +21,7 @@ namespace Ion.IR.Handling
                     // Call.
                     case InstructionName.Call:
                         {
-                            block.Builder.Create((CallInstruction)instruction);
+                            block.Builder.Create((CallInst)instruction);
 
                             break;
                         }
@@ -29,7 +29,7 @@ namespace Ion.IR.Handling
                     // Create.
                     case InstructionName.Create:
                         {
-                            block.Builder.Create((CreateInstruction)instruction);
+                            block.Builder.Create((CreateInst)instruction);
 
                             break;
                         }
@@ -37,7 +37,7 @@ namespace Ion.IR.Handling
                     // Set.
                     case InstructionName.Set:
                         {
-                            block.Builder.Create((SetInstruction)instruction);
+                            block.Builder.Create((SetInst)instruction);
 
                             break;
                         }

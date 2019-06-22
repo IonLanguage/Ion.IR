@@ -13,7 +13,7 @@ namespace Ion.IR.Constructs
             this.Value = value;
         }
 
-        public override string Emit()
+        public override string ToString()
         {
             return $"{Symbol.IdPrefix}{this.Value}";
         }

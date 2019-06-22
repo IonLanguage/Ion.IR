@@ -16,6 +16,18 @@ namespace Ion.IR.Constructs
 
         Section,
 
-        Metadata
+        Metadata,
+
+        Variable,
+
+        Prototype,
+
+        Integer,
+
+        Function,
+
+        Call,
+
+        BinaryExpr
     }
 }

@@ -3,13 +3,13 @@ using Ion.IR.Constructs;
 
 namespace Ion.IR.Instructions
 {
-    public class CreateInstruction : Instruction
+    public class CreateInst : Instruction
     {
         public string ResultIdentifier { get; }
 
         public Kind Kind { get; }
 
-        public CreateInstruction(string resultIdentifier, Kind kind) : base(InstructionName.Create, new IConstruct[]
+        public CreateInst(string resultIdentifier, Kind kind) : base(InstructionName.Create, new IConstruct[]
         {
             new Reference(resultIdentifier),
             kind

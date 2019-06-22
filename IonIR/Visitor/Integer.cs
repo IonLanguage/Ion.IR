@@ -1,15 +1,17 @@
+using Ion.Engine.Llvm;
 using Ion.IR.Constructs;
-using Ion.IR.Target;
 
 namespace Ion.IR.Visitor
 {
-    public class IntegerExpr : Expr
+    public class Integer : Construct
     {
+        public override ConstructType ConstructType => ConstructType.Integer;
+
         public Kind Kind { get; }
 
         public long Value { get; }
 
-        public IntegerExpr(Kind kind, long value)
+        public Integer(Kind kind, long value)
         {
             this.Kind = kind;
             this.Value = value;
@@ -19,6 +21,12 @@ namespace Ion.IR.Visitor
         {
             // Convert to a constant and return as an llvm value wrapper instance.
             return LlvmConstFactory.Int(this.Kind.AsLlvmType(), this.Value);
+        }
+
+        public override string ToString()
+        {
+            // TODO: Implement.
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Ion.IR.Generation
 
         public void Emit(IConstruct construct)
         {
-            this.builder.Append(construct.Emit());
+            this.builder.Append(construct.ToString());
         }
 
         public string Build()

@@ -21,7 +21,7 @@ namespace Ion.IR.Constructs
             //
         }
 
-        public override string Emit()
+        public override string ToString()
         {
             // Create a new fixed string builder instance.
             FixedStringBuilder builder = new FixedStringBuilder();
@@ -33,7 +33,7 @@ namespace Ion.IR.Constructs
             foreach (Instruction instruction in this.Instructions)
             {
                 // Emit instruction to the builder.
-                builder.Append(instruction.Emit());
+                builder.Append(instruction.ToString());
             }
 
             // Return the resulting string.

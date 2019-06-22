@@ -1,7 +1,7 @@
 using System;
+using Ion.Engine.Llvm;
 using Ion.Engine.Tracking;
 using Ion.IR.Constants;
-using Ion.IR.Target;
 
 namespace Ion.IR.Constructs
 {
@@ -33,7 +33,7 @@ namespace Ion.IR.Constructs
             //
         }
 
-        public override string Emit()
+        public override string ToString()
         {
             // Create the resulting string.
             string result = $"{Symbol.TypePrefix}{this.Name}";

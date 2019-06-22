@@ -1,15 +1,25 @@
+using Ion.IR.Constructs;
+
 namespace Ion.IR.Visitor
 {
-    public class Function : Expr
+    public class Function : Construct
     {
+        public override ConstructType ConstructType => ConstructType.Function;
+
         public Prototype Prototype { get; }
 
-        public Expr Body { get; }
+        public Construct Body { get; }
 
-        public Function(Prototype prototype, Expr body)
+        public Function(Prototype prototype, Construct body)
         {
             this.Prototype = prototype;
             this.Body = body;
+        }
+
+        public override string ToString()
+        {
+            // TODO: Implement.
+            throw new System.NotImplementedException();
         }
     }
 }

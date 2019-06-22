@@ -20,7 +20,7 @@ namespace Ion.IR.Visitor
         public LlvmValue AsLlvmValue()
         {
             // Convert to a constant and return as an llvm value wrapper instance.
-            return LlvmConstFactory.Int(this.Kind.AsLlvmType(), this.Value);
+            return LlvmFactory.Int(this.Kind.AsLlvmType(), this.Value);
         }
 
         public override string ToString()

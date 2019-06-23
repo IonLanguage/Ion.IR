@@ -9,6 +9,8 @@ namespace Ion.IR.Constructs
     {
         public override ConstructType ConstructType => ConstructType.Type;
 
+        public bool IsVoid => this.Type == KindType.Void;
+
         public KindType Type { get; }
 
         public string Name { get; }

@@ -9,7 +9,7 @@ namespace Ion.IR.Llvm
         public static LlvmValue Create(this LlvmBuilder builder, CallInst instruction)
         {
             // Create and return the instruction.
-            return builder.CreateCall(instruction.Target, instruction.ResultIdentifier, instruction.Arguments.AsLlvmValues());
+            return builder.CreateCall(instruction.Callee, instruction.ResultIdentifier, instruction.Arguments.AsLlvmValues());
         }
 
         public static LlvmValue Create(this LlvmBuilder builder, CreateInst instruction)

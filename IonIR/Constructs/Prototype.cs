@@ -1,7 +1,9 @@
 namespace Ion.IR.Constructs
 {
-    public class Prototype
+    public class Prototype : Construct
     {
+        public override ConstructType ConstructType => ConstructType.Prototype;
+
         public string Identifier { get; }
 
         public (Kind, Reference)[] Arguments { get; }
@@ -14,6 +16,12 @@ namespace Ion.IR.Constructs
             this.Identifier = identifier;
             this.Arguments = arguments;
             this.ReturnKind = returnKind;
+        }
+
+        public override string ToString()
+        {
+            // TODO: Implement.
+            throw new System.NotImplementedException();
         }
     }
 }

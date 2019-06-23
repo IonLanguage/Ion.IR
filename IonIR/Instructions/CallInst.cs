@@ -6,7 +6,7 @@ namespace Ion.IR.Instructions
 {
     public class CallInst : Instruction
     {
-        public LlvmFunction Target { get; }
+        public LlvmFunction Callee { get; }
 
         public string ResultIdentifier { get; }
 
@@ -15,7 +15,7 @@ namespace Ion.IR.Instructions
         // TODO: What about ResultIdentifier?
         public CallInst(LlvmFunction target, string resultIdentifier, IConstruct[] inputs) : base(InstructionName.Call, inputs)
         {
-            this.Target = target;
+            this.Callee = target;
             this.ResultIdentifier = resultIdentifier;
         }
     }

@@ -1,3 +1,5 @@
+#nullable enable
+
 using Ion.IR.Misc;
 
 namespace Ion.IR.Constructs
@@ -6,14 +8,19 @@ namespace Ion.IR.Constructs
     {
         public override ConstructType ConstructType => ConstructType.Section;
 
-        public string Name { get; }
+        public bool HasReturnValue => this.ReturnValue != null;
+
+        public Construct? ReturnValue { get; }
+
+        public string Identifier { get; }
 
         public Instruction[] Instructions { get; }
 
-        public Section(string name, Instruction[] instructions)
+        public Section(string identifier, Instruction[] instructions, Construct? returnValue = null)
         {
-            this.Name = name;
+            this.Identifier = identifier;
             this.Instructions = instructions;
+            this.ReturnValue = returnValue;
         }
 
         public Section(string name) : this(name, new Instruction[] { })
@@ -27,7 +34,7 @@ namespace Ion.IR.Constructs
             FixedStringBuilder builder = new FixedStringBuilder();
 
             // Emit the header.
-            builder.Append($"{this.Name}:");
+            builder.Append($"{this.Identifier}:");
 
             // Loop through all instructions.
             foreach (Instruction instruction in this.Instructions)

@@ -73,13 +73,26 @@ namespace Ion.IR.Handling
                 throw new Exception("Unexpected function prototype to be null");
             }
             // Ensure that body returns a value if applicable.
-            else if (!node.Prototype.ReturnKind.IsVoid && !node.Body.HasReturnExpr)
+            else if (!node.Prototype.ReturnKind.IsVoid && !node.Body.HasReturnValue)
             {
                 throw new Exception("Functions that do not return void must return a value");
             }
 
-            // Emit the argument types.
-            LlvmType[] arguments = node.Prototype.Arguments.Emit(context);
+            // Create an argument buffer list.
+            List<LlvmType> arguments = new List<LlvmType>();
+
+            // Process the prototype's arguments.
+            foreach ((Kind kind, Reference reference) in node.Prototype.Arguments)
+            {
+                // Visit the argument's type.
+                this.Visit(kind);
+
+                // Pop the resulting type off the stack.
+                LlvmType argumentType = this.typeStack.Pop();
+
+                // Append the argument's type to the argument list.
+                arguments.Add(argumentType);
+            }
 
             // Visit the return type node.
             this.Visit(node.Prototype.ReturnKind);
@@ -127,13 +140,10 @@ namespace Ion.IR.Handling
             }
 
             // Ensures the function does not already exist
-            if (this.symbolTable.functions.Contains(node.Prototype.Identifier))
+            if (this.module.ContainsFunction(node.Prototype.Identifier))
             {
                 throw new Exception($"A function with the identifier '{node.Prototype.Identifier}' already exists");
             }
-
-            // Register the function on the symbol table.
-            this.symbolTable.functions.Add(function);
 
             // Append the function onto the stack.
             this.valueStack.Push(function);
@@ -166,31 +176,25 @@ namespace Ion.IR.Handling
                 arguments.Add(argumentValue);
             }
 
-            // Ensure the function has been emitted.
-            if (!this.symbolTable.functions.Contains(node.TargetIdentifier))
-            {
-                throw new Exception($"Call to a non-existent function named '{node.TargetIdentifier}' performed");
-            }
-
-            // Retrieve the target function.
-            LlvmFunction target = this.symbolTable.functions[node.TargetIdentifier];
+            // Retrieve the callee function.
+            LlvmFunction callee = node.Callee;
 
             // Ensure argument count is correct (with continuous arguments).
-            if (target.ContinuousArgs && arguments.Count < target.ArgumentCount - 1)
+            if (callee.ContinuousArgs && arguments.Count < callee.ArgumentCount - 1)
             {
-                throw new Exception($"Target function requires at least {target.ArgumentCount - 1} argument(s)");
+                throw new Exception($"Target function requires at least {callee.ArgumentCount - 1} argument(s)");
             }
             // Otherwise, expect the argument count to be exact.
-            else if (arguments.Count != target.ArgumentCount)
+            else if (arguments.Count != callee.ArgumentCount)
             {
-                throw new Exception($"Argument amount mismatch, target function requires exactly {target.ArgumentCount} argument(s)");
+                throw new Exception($"Argument amount mismatch, target function requires exactly {callee.ArgumentCount} argument(s)");
             }
 
             // Create the function call.
-            Instruction functionCall = new Instruction(this.Identifier, this.TargetIdentifier);
+            LlvmValue call = this.builder.CreateCall(callee, node.ResultIdentifier, arguments.ToArray());
 
             // Append the value onto the stack.
-            this.valueStack.Push(functionCall);
+            this.valueStack.Push(call);
 
             // Return the node.
             return node;
@@ -262,7 +266,7 @@ namespace Ion.IR.Handling
         public Construct Visit(Prototype node)
         {
             // Retrieve argument count within node.
-            uint argumentCount = (uint)node.Arguments.Count;
+            uint argumentCount = (uint)node.Arguments.Length;
 
             // Create the argument buffer array.
             LlvmType[] arguments = new LlvmType[Math.Max(argumentCount, 1)];
@@ -306,7 +310,8 @@ namespace Ion.IR.Handling
             // Process arguments.
             for (int i = 0; i < argumentCount; ++i)
             {
-                string argumentName = node.Arguments[i];
+                // Retrieve the argument name.
+                string argumentName = node.Arguments[i].Item2.Value;
 
                 // Retrieve the argument at the current index iterator.
                 LlvmValue argument = function.GetArgumentAt((uint)i);

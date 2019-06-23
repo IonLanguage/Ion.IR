@@ -197,6 +197,9 @@ namespace Ion.IR.Handling
                 throw new Exception($"A function with the identifier '{node.Prototype.Identifier}' already exists");
             }
 
+            // Clear named values.
+            this.namedValues.Clear();
+
             // Create an argument buffer list.
             List<LlvmType> arguments = new List<LlvmType>();
 
@@ -248,10 +251,10 @@ namespace Ion.IR.Handling
             this.VisitSection(node.Body);
 
             // Pop the body off the stack.
-            LlvmBlock body = this.blockStack.Pop();
+            this.blockStack.Pop();
 
-            // Position the body's builder at the beginning.
-            body.Builder.PositionAtStart();
+            // Verify the function.
+            function.Verify();
 
             // Append the function onto the stack.
             this.valueStack.Push(function);
@@ -465,52 +468,6 @@ namespace Ion.IR.Handling
 
             // Append the block onto the stack.
             this.blockStack.Push(block);
-
-            // Return the node.
-            return node;
-        }
-
-        public Construct VisitFunction(Function node)
-        {
-            // Clear named values to reset scope upon processing a new function.
-            this.namedValues.Clear();
-
-            // Visit the function's prototype.
-            this.Visit((Construct)node.Prototype);
-
-            // Pop the function prototype from the value stack.
-            LlvmFunction function = (LlvmFunction)this.valueStack.Pop();
-
-            // Set the function locally.
-            this.function = function;
-
-            // Create the entry block for the function, and retrieve its corresponding builder.
-            LlvmBuilder builder = function.AppendBlock(Engine.Misc.SpecialName.Entry).Builder;
-
-            // Attempt to visit the body.
-            try
-            {
-                this.VisitSection(node.Body);
-
-                // Pop the body off the block stack.
-                this.blockStack.Pop();
-            }
-            // Delete the function for error recovery.
-            catch (Exception)
-            {
-                function.Delete();
-
-                throw;
-            }
-
-            // Create the return instruction.
-            builder.CreateReturn(this.valueStack.Pop());
-
-            // Validate the function.
-            function.Verify();
-
-            // Push the function onto the stack.
-            this.valueStack.Push(function);
 
             // Return the node.
             return node;

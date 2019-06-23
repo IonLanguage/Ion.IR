@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Ion.IR.Constants;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Constructs
 {
@@ -46,6 +47,11 @@ namespace Ion.IR.Constructs
             // TODO: Same hard-coded for parentheses.
             // Return the resulting string.
             return $"{this.ReturnKind.ToString()} {Symbol.RoutinePrefix}{this.Identifier}({arguments})";
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitPrototype(this);
         }
     }
 }

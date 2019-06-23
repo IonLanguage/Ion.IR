@@ -1,5 +1,6 @@
 #nullable enable
 
+using Ion.IR.Handling;
 using Ion.IR.Misc;
 
 namespace Ion.IR.Constructs
@@ -45,6 +46,11 @@ namespace Ion.IR.Constructs
 
             // Return the resulting string.
             return builder.ToString();
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitSection(this);
         }
     }
 }

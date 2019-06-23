@@ -14,10 +14,12 @@ namespace Ion.IR.Constructs
 
         public override abstract string ToString();
 
-        public virtual Construct Accept(LlvmVisitor visitor)
-        {
-            return visitor.VisitExtension(this);
-        }
+        public abstract Construct Accept(LlvmVisitor visitor);
+
+        // public virtual Construct Accept(LlvmVisitor visitor)
+        // {
+        //     return visitor.VisitExtension(this);
+        // }
 
         public virtual Construct VisitChildren(LlvmVisitor visitor)
         {

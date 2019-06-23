@@ -1,5 +1,6 @@
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Instructions
 {
@@ -13,6 +14,11 @@ namespace Ion.IR.Instructions
         })
         {
             this.Value = value;
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitEndInst(this);
         }
     }
 }

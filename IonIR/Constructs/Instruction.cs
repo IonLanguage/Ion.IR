@@ -8,13 +8,13 @@ namespace Ion.IR.Constructs
     {
         public override ConstructType ConstructType => ConstructType.Instruction;
 
-        public string Name { get; }
+        public string ResultIdentifier { get; }
 
         public IConstruct[] Inputs { get; }
 
         public Instruction(string name, IConstruct[] inputs)
         {
-            this.Name = name;
+            this.ResultIdentifier = name;
             this.Inputs = inputs;
         }
 
@@ -29,7 +29,7 @@ namespace Ion.IR.Constructs
             List<string> cells = new List<string>();
 
             // Append the name.
-            cells.Add(this.Name);
+            cells.Add(this.ResultIdentifier);
 
             // Loop through all the inputs.
             foreach (IConstruct input in this.Inputs)

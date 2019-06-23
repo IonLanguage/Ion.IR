@@ -2,6 +2,7 @@ using System;
 using Ion.Engine.Llvm;
 using Ion.Engine.Tracking;
 using Ion.IR.Constants;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Constructs
 {
@@ -50,19 +51,9 @@ namespace Ion.IR.Constructs
             return result;
         }
 
-        public LlvmType AsLlvmType()
+        public override Construct Accept(LlvmVisitor visitor)
         {
-            // Create the initial type.
-            LlvmType type = TokenConstants.kindGenerationMap[this.Type]().Wrap();
-
-            // Convert to a pointer if applicable.
-            if (this.IsPointer)
-            {
-                type.ConvertToPointer();
-            }
-
-            // Return the resulting type.
-            return type;
+            return visitor.VisitKind(this);
         }
     }
 }

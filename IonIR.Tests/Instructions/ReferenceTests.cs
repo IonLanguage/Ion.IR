@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace Ion.IR.Tests.Instructions
 {
     [TestFixture]
-    public class IdTests
+    public class ReferenceTests
     {
         [Test]
         [TestCase("test", "$test")]

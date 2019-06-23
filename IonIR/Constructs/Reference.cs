@@ -1,4 +1,5 @@
 using Ion.IR.Constants;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Constructs
 {
@@ -16,6 +17,11 @@ namespace Ion.IR.Constructs
         public override string ToString()
         {
             return $"{Symbol.IdPrefix}{this.Value}";
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

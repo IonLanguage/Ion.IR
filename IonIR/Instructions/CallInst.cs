@@ -1,6 +1,7 @@
 using Ion.Engine.Llvm;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Instructions
 {
@@ -17,6 +18,11 @@ namespace Ion.IR.Instructions
         {
             this.Callee = target;
             this.ResultIdentifier = resultIdentifier;
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitCallInst(this);
         }
     }
 }

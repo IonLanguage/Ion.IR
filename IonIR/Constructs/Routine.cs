@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Ion.IR.Constants;
+using Ion.IR.Handling;
 using Ion.IR.Misc;
 
 namespace Ion.IR.Constructs
@@ -31,6 +30,11 @@ namespace Ion.IR.Constructs
 
             // Trim and return the resulting string.
             return builder.ToString().Trim();
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitRoutine(this);
         }
     }
 }

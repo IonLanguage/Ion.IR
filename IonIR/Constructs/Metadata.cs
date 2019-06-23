@@ -1,3 +1,5 @@
+using Ion.IR.Handling;
+
 namespace Ion.IR.Constructs
 {
     public class Metadata : Construct
@@ -17,6 +19,11 @@ namespace Ion.IR.Constructs
         public override string ToString()
         {
             return $"!'{this.Key}' '{this.Value}'";
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

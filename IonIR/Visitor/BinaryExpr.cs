@@ -1,5 +1,6 @@
 using System;
 using Ion.IR.Constructs;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Visitor
 {
@@ -83,6 +84,11 @@ namespace Ion.IR.Visitor
         {
             // TODO: Implement.
             throw new NotImplementedException();
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitBinaryExpr(this);
         }
     }
 }

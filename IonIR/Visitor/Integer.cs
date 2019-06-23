@@ -1,5 +1,6 @@
 using Ion.Engine.Llvm;
 using Ion.IR.Constructs;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Visitor
 {
@@ -17,16 +18,15 @@ namespace Ion.IR.Visitor
             this.Value = value;
         }
 
-        public LlvmValue AsLlvmValue()
-        {
-            // Convert to a constant and return as an llvm value wrapper instance.
-            return LlvmFactory.Int(this.Kind.AsLlvmType(), this.Value);
-        }
-
         public override string ToString()
         {
             // TODO: Implement.
             throw new System.NotImplementedException();
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitInteger(this);
         }
     }
 }

@@ -1,4 +1,5 @@
 using Ion.IR.Constructs;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Visitor
 {
@@ -16,6 +17,11 @@ namespace Ion.IR.Visitor
         public override string ToString()
         {
             // TODO: Implement.
+            throw new System.NotImplementedException();
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
             throw new System.NotImplementedException();
         }
     }

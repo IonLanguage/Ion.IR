@@ -1,4 +1,5 @@
 using Ion.IR.Constructs;
+using Ion.IR.Handling;
 
 namespace Ion.IR.Visitor
 {
@@ -8,9 +9,9 @@ namespace Ion.IR.Visitor
 
         public Prototype Prototype { get; }
 
-        public Construct Body { get; }
+        public Section Body { get; }
 
-        public Function(Prototype prototype, Construct body)
+        public Function(Prototype prototype, Section body)
         {
             this.Prototype = prototype;
             this.Body = body;
@@ -20,6 +21,11 @@ namespace Ion.IR.Visitor
         {
             // TODO: Implement.
             throw new System.NotImplementedException();
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitFunction(this);
         }
     }
 }

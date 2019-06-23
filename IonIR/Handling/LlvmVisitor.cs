@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using Ion.Engine.Llvm;
 using Ion.Engine.Misc;
+using Ion.IR.Cognition;
+using Ion.IR.Constants;
 using Ion.IR.Constructs;
 using Ion.IR.Instructions;
 using Ion.IR.Tracking;
@@ -19,6 +21,8 @@ namespace Ion.IR.Handling
 
     public class LlvmVisitor
     {
+        public LlvmModule Module => this.module;
+
         protected readonly IrSymbolTable symbolTable;
 
         protected Stack<LlvmBlock> blockStack;
@@ -31,6 +35,8 @@ namespace Ion.IR.Handling
 
         protected LlvmModule module;
 
+        protected LlvmFunction function;
+
         protected Dictionary<string, LlvmValue> namedValues;
 
         public LlvmVisitor(LlvmModule module, LlvmBuilder builder)
@@ -42,6 +48,11 @@ namespace Ion.IR.Handling
             this.typeStack = new Stack<LlvmType>();
             this.blockStack = new Stack<LlvmBlock>();
             this.namedValues = new Dictionary<string, LlvmValue>();
+        }
+
+        public LlvmVisitor(LlvmModule module) : this(module, LlvmBuilder.Create())
+        {
+            //
         }
 
         public Construct Visit(IVisitable<Constructs.Construct, LlvmVisitor> node)
@@ -60,7 +71,110 @@ namespace Ion.IR.Handling
             return node.VisitChildren(this);
         }
 
-        public Construct Visit(Routine node)
+        public Construct VisitStoreInst(StoreInst node)
+        {
+            // Create the LLVM store instruction.
+            LlvmValue value = this.builder.CreateStore(node.Value, node.Target);
+
+            // Append the resulting instruction onto the stack.
+            this.valueStack.Push(value);
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitValue(Value node)
+        {
+            // Create the value buffer.
+            LlvmValue value;
+
+            // Ensure value is identified as a literal.
+            if (!Recognition.IsLiteral(node.Content))
+            {
+                throw new Exception("Content could not be identified as a valid literal");
+            }
+            // Integer literal.
+            else if (Recognition.IsInteger(node.Content))
+            {
+                // Visit the kind.
+                this.VisitKind(node.Kind);
+
+                // Pop the resulting type off the stack.
+                LlvmType type = this.typeStack.Pop();
+
+                // Create the type and assign the value buffer.
+                value = LlvmFactory.Int(type, int.Parse(node.Content));
+            }
+            // String literal.
+            else if (Recognition.IsStringLiteral(node.Content))
+            {
+                value = LlvmFactory.String(node.Content);
+            }
+            // Unrecognized literal.
+            else
+            {
+                throw new Exception($"Unrecognized literal: {node.Content}");
+            }
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitEndInst(EndInst node)
+        {
+            // Visit the value.
+            this.VisitValue(node.Value);
+
+            // Pop off the resulting value.
+            LlvmValue value = this.valueStack.Pop();
+
+            // Create the return instruction.
+            LlvmValue returnInst = this.builder.CreateReturn(value);
+
+            // Append the return instruction onto the stack.
+            this.valueStack.Push(returnInst);
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitCreateInst(CreateInst node)
+        {
+            // Visit the kind.
+            this.VisitKind(node.Kind);
+
+            // Pop the type off the stack.
+            LlvmType type = this.typeStack.Pop();
+
+            // Create the LLVM alloca instruction.
+            LlvmValue value = this.builder.CreateAlloca(type, node.ResultIdentifier);
+
+            // Append the resulting value onto the stack.
+            this.valueStack.Push(value);
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitKind(Kind node)
+        {
+            // Create the initial type.
+            LlvmType type = TokenConstants.kindGenerationMap[node.Type]().Wrap();
+
+            // Convert to a pointer if applicable.
+            if (node.IsPointer)
+            {
+                type.ConvertToPointer();
+            }
+
+            // Append the resulting type onto the stack.
+            this.typeStack.Push(type);
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitRoutine(Routine node)
         {
             // Ensure body was provided or created.
             if (node.Body == null)
@@ -76,6 +190,11 @@ namespace Ion.IR.Handling
             else if (!node.Prototype.ReturnKind.IsVoid && !node.Body.HasReturnValue)
             {
                 throw new Exception("Functions that do not return void must return a value");
+            }
+            // Ensures the function does not already exist.
+            else if (this.module.ContainsFunction(node.Prototype.Identifier))
+            {
+                throw new Exception($"A function with the identifier '{node.Prototype.Identifier}' already exists");
             }
 
             // Create an argument buffer list.
@@ -106,6 +225,9 @@ namespace Ion.IR.Handling
             // Create the function.
             LlvmFunction function = this.module.CreateFunction(node.Prototype.Identifier, type);
 
+            // Register as the temporary, local function.
+            this.function = function;
+
             // Create the argument index counter.
             uint argumentIndexCounter = 0;
 
@@ -123,19 +245,13 @@ namespace Ion.IR.Handling
             }
 
             // Visit the body.
-            this.Visit(node.Body);
+            this.VisitSection(node.Body);
 
             // Pop the body off the stack.
             LlvmBlock body = this.blockStack.Pop();
 
             // Position the body's builder at the beginning.
             body.Builder.PositionAtStart();
-
-            // Ensures the function does not already exist
-            if (this.module.ContainsFunction(node.Prototype.Identifier))
-            {
-                throw new Exception($"A function with the identifier '{node.Prototype.Identifier}' already exists");
-            }
 
             // Append the function onto the stack.
             this.valueStack.Push(function);
@@ -144,7 +260,7 @@ namespace Ion.IR.Handling
             return node;
         }
 
-        public Construct Visit(CallInst node)
+        public Construct VisitCallInst(CallInst node)
         {
             // Create an argument buffer list.
             List<LlvmValue> arguments = new List<LlvmValue>();
@@ -192,16 +308,25 @@ namespace Ion.IR.Handling
             return node;
         }
 
-        public Construct Visit(Integer node)
+        public Construct VisitInteger(Integer node)
         {
-            // Push the node's llvm value to the stack.
-            this.valueStack.Push(node.AsLlvmValue());
+            // Visit the kind.
+            this.VisitKind(node.Kind);
+
+            // Pop the resulting type off the stack.
+            LlvmType type = this.typeStack.Pop();
+
+            // Convert to a constant and return as an llvm value wrapper instance.
+            LlvmValue value = LlvmFactory.Int(type, node.Value);
+
+            // Push the value onto the stack.
+            this.valueStack.Push(value);
 
             // Return the node.
             return node;
         }
 
-        public Construct Visit(Variable node)
+        public Construct VisitVariable(Variable node)
         {
             // Create the value buffer.
             LlvmValue value;
@@ -222,7 +347,7 @@ namespace Ion.IR.Handling
             return node;
         }
 
-        public Construct Visit(CallExpr node)
+        public Construct VisitCallExpr(CallExpr node)
         {
             // Attempt to retrieve the function.
             LlvmFunction? callee = this.module.GetFunction(node.CalleeName);
@@ -246,7 +371,7 @@ namespace Ion.IR.Handling
             }
 
             // Create the call.
-            LlvmValue call = this.builder.CreateCall(callee, SpecialName.Temporary, arguments.ToArray());
+            LlvmValue call = this.builder.CreateCall(callee, Engine.Misc.SpecialName.Temporary, arguments.ToArray());
 
             // Push the call onto the stack.
             this.valueStack.Push(call);
@@ -255,7 +380,7 @@ namespace Ion.IR.Handling
             return node;
         }
 
-        public Construct Visit(Prototype node)
+        public Construct VisitPrototype(Prototype node)
         {
             // Retrieve argument count within node.
             uint argumentCount = (uint)node.Arguments.Length;
@@ -323,7 +448,29 @@ namespace Ion.IR.Handling
             return node;
         }
 
-        public Construct Visit(Function node)
+        public Construct VisitSection(Section node)
+        {
+            // Create the block.
+            LlvmBlock block = this.function.AppendBlock(node.Identifier);
+
+            // Process the section's instructions.
+            foreach (Instruction inst in node.Instructions)
+            {
+                // Visit the instruction.
+                this.Visit(inst);
+
+                // Pop the resulting LLVM instruction off the stack.
+                this.valueStack.Pop();
+            }
+
+            // Append the block onto the stack.
+            this.blockStack.Push(block);
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitFunction(Function node)
         {
             // Clear named values to reset scope upon processing a new function.
             this.namedValues.Clear();
@@ -334,13 +481,19 @@ namespace Ion.IR.Handling
             // Pop the function prototype from the value stack.
             LlvmFunction function = (LlvmFunction)this.valueStack.Pop();
 
+            // Set the function locally.
+            this.function = function;
+
             // Create the entry block for the function, and retrieve its corresponding builder.
-            LlvmBuilder builder = function.AppendBlock(SpecialName.Entry).Builder;
+            LlvmBuilder builder = function.AppendBlock(Engine.Misc.SpecialName.Entry).Builder;
 
             // Attempt to visit the body.
             try
             {
-                this.Visit(node.Body);
+                this.VisitSection(node.Body);
+
+                // Pop the body off the block stack.
+                this.blockStack.Pop();
             }
             // Delete the function for error recovery.
             catch (Exception)

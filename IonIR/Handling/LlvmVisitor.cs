@@ -101,7 +101,7 @@ namespace Ion.IR.Handling
             LlvmType returnType = this.typeStack.Pop();
 
             // Emit the function type.
-            LlvmType type = LlvmFactory.Function(returnType, arguments, node.Prototype.Arguments.Continuous);
+            LlvmType type = LlvmFactory.Function(returnType, arguments.ToArray(), node.Prototype.HasInfiniteArguments);
 
             // Create the function.
             LlvmFunction function = this.module.CreateFunction(node.Prototype.Identifier, type);
@@ -130,14 +130,6 @@ namespace Ion.IR.Handling
 
             // Position the body's builder at the beginning.
             body.Builder.PositionAtStart();
-
-            // TODO: Missing support for native attribute emission.
-            // Emit attributes as first-class instructions if applicable.
-            foreach (Attribute attribute in node.Attributes)
-            {
-                // Emit the attribute onto the body's builder context.
-                attribute.Emit(bodyContext);
-            }
 
             // Ensures the function does not already exist
             if (this.module.ContainsFunction(node.Prototype.Identifier))
@@ -180,7 +172,7 @@ namespace Ion.IR.Handling
             LlvmFunction callee = node.Callee;
 
             // Ensure argument count is correct (with continuous arguments).
-            if (callee.ContinuousArgs && arguments.Count < callee.ArgumentCount - 1)
+            if (callee.HasInfiniteArguments && arguments.Count < callee.ArgumentCount - 1)
             {
                 throw new Exception($"Target function requires at least {callee.ArgumentCount - 1} argument(s)");
             }

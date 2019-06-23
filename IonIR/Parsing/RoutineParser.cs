@@ -72,18 +72,8 @@ namespace Ion.IR.Parsing
             // Update the token buffer.
             buffer = context.Stream.Current;
 
-            // Create the section buffer list.
-            List<Section> sections = new List<Section>();
-
-            // Begin instruction parsing.
-            while (buffer.Type != TokenType.SymbolTilde)
-            {
-                // Invoke section parser.
-                Section section = new SectionParser().Parse(context);
-
-                // Append the section to the list.
-                sections.Add(section);
-            }
+            // Parse the body.
+            Section body = new SectionParser().Parse(context);
 
             // Ensure current token is of type symbol tilde.
             context.Stream.EnsureCurrent(TokenType.SymbolTilde);
@@ -91,14 +81,11 @@ namespace Ion.IR.Parsing
             // Skip symbol tilde.
             context.Stream.Skip();
 
+            // Create the prototype.
+            Prototype prototype = new Prototype(identifier, args.ToArray(), returnKind, false);
+
             // Create the routine construct.
-            Routine routine = new Routine(new RoutineOptions
-            {
-                Args = args.ToArray(),
-                Sections = sections.ToArray(),
-                Name = identifier,
-                ReturnKind = returnKind
-            });
+            Routine routine = new Routine(prototype, body);
 
             // Return the resulting routine.
             return routine;

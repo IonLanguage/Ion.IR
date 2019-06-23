@@ -14,7 +14,7 @@ namespace Ion.IR.Tests.Instructions
             Reference id = new Reference(input);
 
             // Emit the construct.
-            string result = id.Emit();
+            string result = id.ToString();
 
             // Compare result with expected output.
             Assert.AreEqual(output, result);

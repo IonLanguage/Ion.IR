@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Ion.IR.Constants;
+
 namespace Ion.IR.Constructs
 {
     public class Prototype : Construct
@@ -23,8 +26,26 @@ namespace Ion.IR.Constructs
 
         public override string ToString()
         {
-            // TODO: Implement.
-            throw new System.NotImplementedException();
+            // Emit the arguments.
+            List<string> argsBuffer = new List<string>();
+
+            // Loop through all arguments.
+            foreach ((Kind kind, Reference reference) in this.Arguments)
+            {
+                // Emit argument and store in the buffer.
+                argsBuffer.Add($"{kind.ToString()} {reference.ToString()}");
+            }
+
+            // Convert buffer to an array.
+            string[] argArray = argsBuffer.ToArray();
+
+            // TODO: Comma is hard-coded.
+            // Join arguments.
+            string arguments = string.Join(", ", argArray).Trim();
+
+            // TODO: Same hard-coded for parentheses.
+            // Return the resulting string.
+            return $"{this.ReturnKind.ToString()} {Symbol.RoutinePrefix}{this.Identifier}({arguments})";
         }
     }
 }

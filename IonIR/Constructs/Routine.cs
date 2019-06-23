@@ -23,27 +23,8 @@ namespace Ion.IR.Constructs
             // Create a new fixed string builder instance.
             FixedStringBuilder builder = new FixedStringBuilder();
 
-            // Emit the arguments.
-            List<string> argsBuffer = new List<string>();
-
-            // ----------- TODO: Migrate emit code to Prototype class -------------
-            // Loop through all arguments.
-            foreach ((Kind kind, Reference reference) in this.Args)
-            {
-                // Emit argument and store in the buffer.
-                argsBuffer.Add($"{kind.ToString()} {reference.ToString()}");
-            }
-
-            // Convert buffer to an array.
-            string[] argArray = argsBuffer.ToArray();
-
-            // TODO: Comma is hard-coded.
-            // Join arguments.
-            string args = string.Join(", ", argArray).Trim();
-
-            // TODO: Same hard-coded for parentheses.
-            // Append the routine's header.
-            builder.Append($"{this.ReturnKind.ToString()} {Symbol.RoutinePrefix}{this.Name}({args})");
+            // Emit the prototype.
+            builder.Append(this.Prototype.ToString());
 
             // Emit and append the body.
             builder.Append(this.Body.ToString());

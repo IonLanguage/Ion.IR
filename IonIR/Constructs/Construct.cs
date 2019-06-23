@@ -8,7 +8,7 @@ namespace Ion.IR.Constructs
         ConstructType ConstructType { get; }
     }
 
-    public abstract class Construct : Taggable, IVisitable<Construct, LlvmVisitor>
+    public abstract class Construct : Taggable, IConstruct, IVisitable<Construct, LlvmVisitor>
     {
         public abstract ConstructType ConstructType { get; }
 

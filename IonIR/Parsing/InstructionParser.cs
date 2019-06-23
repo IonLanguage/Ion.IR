@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Ion.IR.Constructs;
 using Ion.IR.Syntax;
@@ -44,12 +45,15 @@ namespace Ion.IR.Parsing
             // Skip semi-colon token.
             context.Stream.Skip();
 
+            // TODO
+            throw new NotImplementedException();
+
             // TODO: Resolve instructions depending on their types (names).
             // Create the instruction construct.
-            Instruction instruction = new Instruction(name, inputs.ToArray());
+            // Instruction instruction = new Instruction(name, inputs.ToArray());
 
             // Return the resulting instruction.
-            return instruction;
+            // return instruction;
         }
     }
 }

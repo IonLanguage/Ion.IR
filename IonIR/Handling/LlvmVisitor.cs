@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using Ion.Engine.Llvm;
-using Ion.Engine.Misc;
 using Ion.IR.Cognition;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
@@ -35,7 +34,7 @@ namespace Ion.IR.Handling
 
         protected LlvmModule module;
 
-        protected LlvmFunction function;
+        protected LlvmFunction? function;
 
         protected Dictionary<string, LlvmValue> namedValues;
 
@@ -57,13 +56,13 @@ namespace Ion.IR.Handling
 
         public Construct Visit(IVisitable<Constructs.Construct, LlvmVisitor> node)
         {
+            // Ensure node is not null.
             if (node != null)
             {
                 return node.Accept(this);
             }
 
-            // TODO
-            return null;
+            throw new ArgumentNullException("Node argument cannot be null");
         }
 
         public Construct VisitExtension(Construct node)
@@ -453,6 +452,12 @@ namespace Ion.IR.Handling
 
         public Construct VisitSection(Section node)
         {
+            // Ensure function buffer is not null.
+            if (this.function == null)
+            {
+                throw new Exception("Expected function buffer to be set");
+            }
+
             // Create the block.
             LlvmBlock block = this.function.AppendBlock(node.Identifier);
 

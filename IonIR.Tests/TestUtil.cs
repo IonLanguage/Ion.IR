@@ -9,6 +9,8 @@ namespace Ion.IR.Tests
 
         public const string OutputSubpath = "Output";
 
+        public const string InputExt = "iox";
+
         public const string OutputExt = "ll";
 
         public static readonly string BasePath = Path.GetFullPath("../../../Data");
@@ -32,7 +34,7 @@ namespace Ion.IR.Tests
 
         public static string GetInput(string fileName)
         {
-            return TestUtil.GetData(Path.Join(TestUtil.InputSubpath, fileName));
+            return TestUtil.GetData(Path.Join(TestUtil.InputSubpath, $"{fileName}.{TestUtil.InputExt}"));
         }
 
         public static string GetOutput(string fileName)

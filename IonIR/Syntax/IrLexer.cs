@@ -12,9 +12,11 @@ namespace Ion.IR.Syntax
 {
     public class IrLexer : Lexer<Token, TokenType>
     {
-        public IrLexer(string input) : base(input)
+        protected readonly bool ignoreWhitespace;
+
+        public IrLexer(string input, bool ignoreWhitespace = true) : base(input)
         {
-            //
+            this.ignoreWhitespace = ignoreWhitespace;
         }
 
         public override Token[] Tokenize()
@@ -69,6 +71,25 @@ namespace Ion.IR.Syntax
 
             // Begin capturing the token. Identify the token as unknown initially.
             Token token = new Token(TokenType.Unknown, this.Char.Value.ToString(), this.Position);
+
+            // Whitespace.
+            if (char.IsWhiteSpace(this.Char.Value))
+            {
+                // Ignore whitespace flag is set, skip.
+                if (this.ignoreWhitespace)
+                {
+                    while (char.IsWhiteSpace(this.Char.Value))
+                    {
+                        this.Skip();
+                    }
+                }
+                // Match all whitespace characters until we hit a normal character.
+                else if (this.MatchExpression(token, TokenType.Whitespace, Pattern.ContinuousWhitespace, out token))
+                {
+                    // Return the token.
+                    return token;
+                }
+            }
 
             // Test string against simple token type values.
             foreach (var pair in TokenConstants.simple)

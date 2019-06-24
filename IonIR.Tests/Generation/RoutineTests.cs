@@ -1,7 +1,11 @@
+using System;
 using Ion.Engine.Llvm;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
 using Ion.IR.Handling;
+using Ion.IR.Misc;
+using Ion.IR.Parsing;
+using Ion.IR.Syntax;
 using NUnit.Framework;
 
 namespace Ion.IR.Tests.Instructions
@@ -9,6 +13,24 @@ namespace Ion.IR.Tests.Instructions
     [TestFixture]
     public class RoutineTests
     {
+        [Test]
+        public void ParseRoutine()
+        {
+            string input = TestUtil.GetInput("Routine");
+
+            IrLexer lexer = new IrLexer(input);
+
+            Token[] tokens = lexer.Tokenize();
+
+            Driver driver = new Driver(new TokenStream(tokens));
+
+            driver.Invoke();
+
+            Console.WriteLine(input);
+
+            Assert.Fail();
+        }
+
         [Test]
         public void VisitRoutine()
         {

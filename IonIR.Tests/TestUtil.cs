@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using Ion.IR.Syntax;
+using Newtonsoft.Json;
 
 namespace Ion.IR.Tests
 {
@@ -32,14 +35,29 @@ namespace Ion.IR.Tests
             return result;
         }
 
-        public static string GetInput(string fileName)
+        public static string GetInput(string fileName, string extension = TestUtil.InputExt)
         {
-            return TestUtil.GetData(Path.Join(TestUtil.InputSubpath, $"{fileName}.{TestUtil.InputExt}"));
+            return TestUtil.GetData(Path.Join(TestUtil.InputSubpath, $"{fileName}.{extension}"));
         }
 
-        public static string GetOutput(string fileName)
+        public static string GetOutput(string fileName, string extension = TestUtil.OutputExt)
         {
-            return TestUtil.GetData(Path.Join(TestUtil.OutputSubpath, $"{fileName}.{TestUtil.OutputExt}"));
+            return TestUtil.GetData(Path.Join(TestUtil.OutputSubpath, $"{fileName}.{extension}"));
+        }
+
+        public static Token[] DeserializeTokens(string content)
+        {
+            return JsonConvert.DeserializeObject<List<Token>>(content).ToArray();
+        }
+
+        public static Token[] DeserializeTokensFromInput(string fileName, string extension = TestUtil.InputExt)
+        {
+            return TestUtil.DeserializeTokens(TestUtil.GetInput(fileName, extension));
+        }
+
+        public static Token[] DeserializeTokensFromOutput(string fileName, string extension = TestUtil.OutputExt)
+        {
+            return TestUtil.DeserializeTokens(TestUtil.GetOutput(fileName, extension));
         }
     }
 }

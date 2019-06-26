@@ -13,20 +13,20 @@ namespace Ion.IR.Parsing
         // TODO: What if EOF token has not been processed itself?
         public bool HasNext => !this.stream.IsLastItem;
 
+        public LlvmModule Module { get; }
+
         protected readonly ParserContext context;
 
         protected readonly TokenStream stream;
-
-        protected readonly LlvmModule module;
 
         protected readonly LlvmVisitor visitor;
 
         public Driver(LlvmModule module, TokenStream stream)
         {
             this.stream = stream;
-            this.module = module;
+            this.Module = module;
             this.context = new ParserContext(this.stream);
-            this.visitor = new LlvmVisitor(this.module);
+            this.visitor = new LlvmVisitor(this.Module);
         }
 
         public Driver(TokenStream stream) : this(LlvmModule.Create(SpecialName.Entry), stream)

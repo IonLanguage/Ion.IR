@@ -1,0 +1,56 @@
+[
+    {
+        "type": 8,
+        "value": "@",
+        "startPos": 0,
+        "EndPos": 1
+    },
+    {
+        "type": 3,
+        "value": "test",
+        "startPos": 1,
+        "EndPos": 5
+    },
+    {
+        "type": 15,
+        "value": "(",
+        "startPos": 5,
+        "EndPos": 6
+    },
+    {
+        "type": 16,
+        "value": ")",
+        "startPos": 6,
+        "EndPos": 7
+    },
+    {
+        "type": 9,
+        "value": ":",
+        "startPos": 7,
+        "EndPos": 8
+    },
+    {
+        "type": 3,
+        "value": "void",
+        "startPos": 9,
+        "EndPos": 13
+    },
+    {
+        "type": 3,
+        "value": "entry",
+        "startPos": 13,
+        "EndPos": 18
+    },
+    {
+        "type": 9,
+        "value": ":",
+        "startPos": 19,
+        "EndPos": 20
+    },
+    {
+        "type": 11,
+        "value": "~",
+        "startPos": 20,
+        "EndPos": 21
+    }
+]

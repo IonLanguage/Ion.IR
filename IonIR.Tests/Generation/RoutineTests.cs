@@ -1,4 +1,3 @@
-using System;
 using Ion.Engine.Llvm;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
@@ -7,6 +6,8 @@ using Ion.IR.Misc;
 using Ion.IR.Parsing;
 using Ion.IR.Syntax;
 using NUnit.Framework;
+using Newtonsoft.Json;
+using System;
 
 namespace Ion.IR.Tests.Instructions
 {
@@ -20,15 +21,11 @@ namespace Ion.IR.Tests.Instructions
 
             IrLexer lexer = new IrLexer(input);
 
-            Token[] tokens = lexer.Tokenize();
+            Token[] output = lexer.Tokenize();
 
-            Driver driver = new Driver(new TokenStream(tokens));
+            Token[] expected = TestUtil.DeserializeTokensFromOutput("RoutineTokens", "json");
 
-            driver.Invoke();
-
-            Console.WriteLine(input);
-
-            Assert.Fail();
+            Assert.AreEqual(expected, JsonConvert.SerializeObject(output));
         }
 
         [Test]
@@ -44,7 +41,7 @@ namespace Ion.IR.Tests.Instructions
             Routine routine = new Routine(prototype, body);
 
             // Create the host module.
-            LlvmModule module = LlvmModule.Create("test");
+            LlvmModule module = LlvmModule.Create();
 
             // Create the visitor.
             LlvmVisitor visitor = new LlvmVisitor(module);
@@ -53,7 +50,7 @@ namespace Ion.IR.Tests.Instructions
             visitor.VisitRoutine(routine);
 
             // Load the expected output.
-            string expected = TestUtil.GetOutput("EmptyRoutine");
+            string expected = TestUtil.GetOutput("EmptyFunction");
 
             // Compare results.
             Assert.AreEqual(expected, module.ToString());

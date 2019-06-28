@@ -25,7 +25,17 @@ namespace Ion.IR.Tests.Instructions
 
             Token[] expected = TestUtil.DeserializeTokensFromOutput("RoutineTokens", "json");
 
-            Assert.AreEqual(expected, JsonConvert.SerializeObject(output));
+            Assert.AreEqual(expected.Length, output.Length);
+
+            int i = 0;
+
+            foreach (Token token in expected)
+            {
+                Assert.AreEqual(token.Value, output[i].Value);
+                Assert.AreEqual(token.Type, output[i].Type);
+                Assert.AreEqual(token.StartPos, output[i].StartPos);
+                i++;
+            }
         }
 
         [Test]

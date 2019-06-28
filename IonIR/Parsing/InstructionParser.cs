@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Ion.IR.Constants;
 using Ion.IR.Constructs;
+using Ion.IR.Instructions;
 using Ion.IR.Syntax;
 
 namespace Ion.IR.Parsing
@@ -50,15 +52,33 @@ namespace Ion.IR.Parsing
             // Skip semi-colon token.
             context.Stream.Skip();
 
-            // TODO
-            throw new NotImplementedException();
+            Instruction inst;
 
-            // TODO: Resolve instructions depending on their types (names).
-            // Create the instruction construct.
-            // Instruction instruction = new Instruction(name, inputs.ToArray());
+            switch (name)
+            {
+                case InstructionName.End:
+                    {
+                        if (inputs.Count > 1)
+                        {
+                            throw new Exception("Unexpected amount of inputs");
+                        }
+                        else if (!(inputs[0] is Value))
+                        {
+                            throw new Exception("Expected input to be a value");
+                        }
 
-            // Return the resulting instruction.
-            // return instruction;
+                        inst = new EndInst(inputs[0] as Value);
+
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new Exception($"Unrecognized instruction name: {name}");
+                    }
+            }
+
+            return inst;
         }
     }
 }

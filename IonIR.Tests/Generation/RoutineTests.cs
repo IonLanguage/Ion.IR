@@ -1,3 +1,4 @@
+using System;
 using Ion.Engine.Llvm;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
@@ -6,8 +7,6 @@ using Ion.IR.Misc;
 using Ion.IR.Parsing;
 using Ion.IR.Syntax;
 using NUnit.Framework;
-using Newtonsoft.Json;
-using System;
 
 namespace Ion.IR.Tests.Instructions
 {
@@ -36,6 +35,26 @@ namespace Ion.IR.Tests.Instructions
                 Assert.AreEqual(token.StartPos, output[i].StartPos);
                 i++;
             }
+        }
+
+        [Test]
+        public void ParseRoutineWithInsts()
+        {
+            string input = TestUtil.GetInput("RoutineWithInsts");
+
+            IrLexer lexer = new IrLexer(input);
+
+            Token[] output = lexer.Tokenize();
+
+            TokenStream stream = new TokenStream(output);
+
+            Driver driver = new Driver(stream);
+
+            driver.Invoke();
+
+            Console.WriteLine(driver.Module.ToString());
+
+            Assert.Fail();
         }
 
         [Test]

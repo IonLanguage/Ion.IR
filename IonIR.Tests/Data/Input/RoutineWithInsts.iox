@@ -1,0 +1,4 @@
+@test() :void
+entry:
+#result = end :i32 0;
+~

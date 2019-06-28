@@ -14,14 +14,17 @@ namespace Ion.IR.Parsing
     {
         public Instruction Parse(ParserContext context)
         {
-            // Ensure current token is of type identifier.
-            context.Stream.EnsureCurrent(TokenType.Identifier);
+            context.Stream.EnsureCurrent(TokenType.SymbolHash);
 
-            // Capture instruction name.
-            string name = context.Stream.Current.Value;
-
-            // Skip identifier token.
             context.Stream.Skip();
+
+            string resultIdentifier = new IdentifierParser().Parse(context);
+
+            context.Stream.EnsureCurrent(TokenType.SymbolEqual);
+
+            context.Stream.Skip();
+
+            string name = new IdentifierParser().Parse(context);
 
             // Create a buffer for the current token.
             Token token = context.Stream.Get();
@@ -37,6 +40,8 @@ namespace Ion.IR.Parsing
 
                 // Append the input to the list.
                 inputs.Add(input);
+
+                token = context.Stream.Get();
             }
 
             // Ensure current token is of type semi-colon.

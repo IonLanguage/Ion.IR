@@ -51,7 +51,8 @@ namespace Ion.IR.Constants
             {"[", TokenType.SymbolBracketL},
             {"]", TokenType.SymbolBracketR},
             {",", TokenType.SymbolComma},
-            {"~", TokenType.SymbolTilde}
+            {"~", TokenType.SymbolTilde},
+            {"=", TokenType.SymbolEqual}
         }.SortByKeyLength();
 
         public static Dictionary<string, TokenType> instructions = new Dictionary<string, TokenType>
@@ -60,11 +61,10 @@ namespace Ion.IR.Constants
             {InstructionName.End, TokenType.InstructionEnd},
             {InstructionName.Create, TokenType.InstructionCreate},
             {InstructionName.Set, TokenType.InstructionSet}
-        }.SortByKeyLength<TokenType>();
+        };
 
         public static Dictionary<string, TokenType> simple = new[]
         {
-            TokenConstants.instructions,
             TokenConstants.symbols
         }.SelectMany(dictionary => dictionary)
         .ToLookup(pair => pair.Key, pair => pair.Value)

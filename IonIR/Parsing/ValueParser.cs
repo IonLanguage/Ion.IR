@@ -33,6 +33,8 @@ namespace Ion.IR.Parsing
             // Create the value construct.
             Value value = new Value(kind, tokenValue);
 
+            context.Stream.Skip();
+
             // Return the construct.
             return value;
         }

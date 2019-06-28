@@ -30,6 +30,8 @@ namespace Ion.IR.Syntax
 
         SymbolHash,
 
+        SymbolEqual,
+
         SymbolSemiColon,
 
         SymbolParenthesesL,

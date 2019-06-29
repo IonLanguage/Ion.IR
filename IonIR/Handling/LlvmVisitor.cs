@@ -6,7 +6,6 @@ using Ion.Engine.Llvm;
 using Ion.IR.Cognition;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
-using Ion.IR.Instructions;
 using Ion.IR.Tracking;
 using Ion.IR.Visitor;
 using LLVMSharp;
@@ -18,7 +17,7 @@ namespace Ion.IR.Handling
         TNode Accept(TVisitor visitor);
     }
 
-    public class LlvmVisitor
+    public partial class LlvmVisitor
     {
         public LlvmModule Module => this.module;
 
@@ -70,18 +69,6 @@ namespace Ion.IR.Handling
             return node.VisitChildren(this);
         }
 
-        public Construct VisitStoreInst(StoreInst node)
-        {
-            // Create the LLVM store instruction.
-            LlvmValue value = this.builder.CreateStore(node.Value, node.Target);
-
-            // Append the resulting instruction onto the stack.
-            this.valueStack.Push(value);
-
-            // Return the node.
-            return node;
-        }
-
         public Construct VisitValue(Value node)
         {
             // Create the value buffer.
@@ -116,42 +103,6 @@ namespace Ion.IR.Handling
             }
 
             // Append the value onto the stack.
-            this.valueStack.Push(value);
-
-            // Return the node.
-            return node;
-        }
-
-        public Construct VisitEndInst(EndInst node)
-        {
-            // Visit the value.
-            this.VisitValue(node.Value);
-
-            // Pop off the resulting value.
-            LlvmValue value = this.valueStack.Pop();
-
-            // Create the return instruction.
-            LlvmValue returnInst = this.builder.CreateReturn(value);
-
-            // Append the return instruction onto the stack.
-            this.valueStack.Push(returnInst);
-
-            // Return the node.
-            return node;
-        }
-
-        public Construct VisitCreateInst(CreateInst node)
-        {
-            // Visit the kind.
-            this.VisitKind(node.Kind);
-
-            // Pop the type off the stack.
-            LlvmType type = this.typeStack.Pop();
-
-            // Create the LLVM alloca instruction.
-            LlvmValue value = this.builder.CreateAlloca(type, node.ResultIdentifier);
-
-            // Append the resulting value onto the stack.
             this.valueStack.Push(value);
 
             // Return the node.
@@ -267,54 +218,6 @@ namespace Ion.IR.Handling
             return node;
         }
 
-        public Construct VisitCallInst(CallInst node)
-        {
-            // Create an argument buffer list.
-            List<LlvmValue> arguments = new List<LlvmValue>();
-
-            // Emit the call arguments.
-            foreach (Constructs.Construct argument in node.Arguments)
-            {
-                // Continue if the argument is null.
-                if (argument == null)
-                {
-                    continue;
-                }
-
-                // Visit the argument.
-                this.Visit(argument);
-
-                // Pop the argument off the value stack.
-                LlvmValue argumentValue = this.valueStack.Pop();
-
-                // Append argument value to the argument buffer list.
-                arguments.Add(argumentValue);
-            }
-
-            // Retrieve the callee function.
-            LlvmFunction callee = node.Callee;
-
-            // Ensure argument count is correct (with continuous arguments).
-            if (callee.HasInfiniteArguments && arguments.Count < callee.ArgumentCount - 1)
-            {
-                throw new Exception($"Target function requires at least {callee.ArgumentCount - 1} argument(s)");
-            }
-            // Otherwise, expect the argument count to be exact.
-            else if (arguments.Count != callee.ArgumentCount)
-            {
-                throw new Exception($"Argument amount mismatch, target function requires exactly {callee.ArgumentCount} argument(s)");
-            }
-
-            // Create the function call.
-            LlvmValue call = this.builder.CreateCall(callee, node.ResultIdentifier, arguments.ToArray());
-
-            // Append the value onto the stack.
-            this.valueStack.Push(call);
-
-            // Return the node.
-            return node;
-        }
-
         public Construct VisitInteger(Integer node)
         {
             // Visit the kind.
@@ -349,39 +252,6 @@ namespace Ion.IR.Handling
             {
                 throw new Exception($"Undefined reference to variable: '{node.Name}'");
             }
-
-            // Return the node.
-            return node;
-        }
-
-        public Construct VisitCallExpr(CallExpr node)
-        {
-            // Attempt to retrieve the function.
-            LlvmFunction? callee = this.module.GetFunction(node.CalleeName);
-
-            // Ensure callee function is not null.
-            if (callee == null)
-            {
-                throw new Exception($"Call to undefined function: {node.CalleeName}");
-            }
-
-            // Create the argument buffer list, which will be populated from the stack.
-            List<LlvmValue> arguments = new List<LlvmValue>();
-
-            // Visit call arguments.
-            foreach (Construct argument in node.Arguments)
-            {
-                this.Visit(argument);
-
-                // Pop value from the stack and append to the buffer list.
-                arguments.Add(this.valueStack.Pop());
-            }
-
-            // Create the call.
-            LlvmValue call = this.builder.CreateCall(callee, Engine.Misc.SpecialName.Temporary, arguments.ToArray());
-
-            // Push the call onto the stack.
-            this.valueStack.Push(call);
 
             // Return the node.
             return node;

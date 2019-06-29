@@ -1,7 +1,9 @@
+using System;
 using Ion.Engine.Llvm;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
 using Ion.IR.Handling;
+using Ion.IR.Instructions;
 using Ion.IR.Syntax;
 using NUnit.Framework;
 
@@ -39,7 +41,7 @@ namespace Ion.IR.Tests.Instructions
         }
 
         [Test]
-        public void VisitRoutine()
+        public void VisitEmptyRoutine()
         {
             // Create the prototype.
             Prototype prototype = new Prototype("test", new (Kind, Reference)[] { }, KindFactory.Void, false);
@@ -61,6 +63,39 @@ namespace Ion.IR.Tests.Instructions
 
             // Load the expected output.
             string expected = TestUtil.GetOutput("EmptyFunction");
+
+            // Compare results.
+            Assert.AreEqual(expected, module.ToString());
+        }
+
+        [Test]
+        public void VisitRoutine()
+        {
+            // Create the prototype.
+            Prototype prototype = new Prototype("test", new (Kind, Reference)[] { }, KindFactory.Void, false);
+
+            // Create the body.
+            Section body = new Section("entry", new Instruction[] {
+                new CreateInst("test", KindFactory.Int32),
+                new CreateInst("test2", KindFactory.Int8)
+            });
+
+            // Create the routine.
+            Routine routine = new Routine(prototype, body);
+
+            // Create the host module.
+            LlvmModule module = LlvmModule.Create();
+
+            // Create the visitor.
+            LlvmVisitor visitor = new LlvmVisitor(module);
+
+            // Invoke the visitor
+            visitor.VisitRoutine(routine);
+
+            // Load the expected output.
+            string expected = TestUtil.GetOutput("FunctionWithAlloca");
+
+            Console.WriteLine(module.ToString());
 
             // Compare results.
             Assert.AreEqual(expected, module.ToString());

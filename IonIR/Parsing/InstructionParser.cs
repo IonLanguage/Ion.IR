@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using Ion.IR.Constants;
@@ -16,15 +18,18 @@ namespace Ion.IR.Parsing
     {
         public Instruction Parse(ParserContext context)
         {
-            context.Stream.EnsureCurrent(TokenType.SymbolHash);
+            string? resultIdentifier = null;
 
-            context.Stream.Skip();
+            if (context.Stream.Current.Type == TokenType.SymbolPercent)
+            {
+                context.Stream.Skip();
 
-            string resultIdentifier = new IdentifierParser().Parse(context);
+                resultIdentifier = new IdentifierParser().Parse(context);
 
-            context.Stream.EnsureCurrent(TokenType.SymbolEqual);
+                context.Stream.EnsureCurrent(TokenType.SymbolEqual);
 
-            context.Stream.Skip();
+                context.Stream.Skip();
+            }
 
             string name = new IdentifierParser().Parse(context);
 
@@ -43,6 +48,7 @@ namespace Ion.IR.Parsing
                 // Append the input to the list.
                 inputs.Add(input);
 
+                // Update the buffer token.
                 token = context.Stream.Get();
             }
 

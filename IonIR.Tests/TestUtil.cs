@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Ion.IR.Syntax;
 using Newtonsoft.Json;
+using NUnit.Framework;
 
 namespace Ion.IR.Tests
 {
@@ -58,6 +59,21 @@ namespace Ion.IR.Tests
         public static Token[] DeserializeTokensFromOutput(string fileName, string extension = TestUtil.OutputExt)
         {
             return TestUtil.DeserializeTokens(TestUtil.GetOutput(fileName, extension));
+        }
+
+        public static void AssertTokens(Token[] expected, Token[] output)
+        {
+            Assert.AreEqual(expected.Length, output.Length);
+
+            int i = 0;
+
+            foreach (Token token in expected)
+            {
+                Assert.AreEqual(token.Value, output[i].Value);
+                Assert.AreEqual(token.Type, output[i].Type);
+                Assert.AreEqual(token.StartPos, output[i].StartPos);
+                i++;
+            }
         }
     }
 }

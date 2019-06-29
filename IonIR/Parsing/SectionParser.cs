@@ -31,6 +31,9 @@ namespace Ion.IR.Parsing
 
                 // Append the instruction to the list.
                 instructions.Add(instruction);
+
+                // Update the token buffer.
+                buffer = context.Stream.Current;
             }
 
             // Ensure current token is of type symbol tilde.

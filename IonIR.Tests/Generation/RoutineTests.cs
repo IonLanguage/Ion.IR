@@ -1,10 +1,7 @@
-using System;
 using Ion.Engine.Llvm;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;
 using Ion.IR.Handling;
-using Ion.IR.Misc;
-using Ion.IR.Parsing;
 using Ion.IR.Syntax;
 using NUnit.Framework;
 
@@ -24,17 +21,7 @@ namespace Ion.IR.Tests.Instructions
 
             Token[] expected = TestUtil.DeserializeTokensFromOutput("RoutineTokens", "json");
 
-            Assert.AreEqual(expected.Length, output.Length);
-
-            int i = 0;
-
-            foreach (Token token in expected)
-            {
-                Assert.AreEqual(token.Value, output[i].Value);
-                Assert.AreEqual(token.Type, output[i].Type);
-                Assert.AreEqual(token.StartPos, output[i].StartPos);
-                i++;
-            }
+            TestUtil.AssertTokens(expected, output);
         }
 
         [Test]
@@ -46,15 +33,9 @@ namespace Ion.IR.Tests.Instructions
 
             Token[] output = lexer.Tokenize();
 
-            TokenStream stream = new TokenStream(output);
+            Token[] expected = TestUtil.DeserializeTokensFromOutput("RoutineInstTokens", "json");
 
-            Driver driver = new Driver(stream);
-
-            driver.Invoke();
-
-            Console.WriteLine(driver.Module.ToString());
-
-            Assert.Fail();
+            TestUtil.AssertTokens(expected, output);
         }
 
         [Test]

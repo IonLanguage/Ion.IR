@@ -9,19 +9,14 @@ namespace Ion.IR.Constructs
     {
         public override ConstructType ConstructType => ConstructType.Section;
 
-        public bool HasReturnValue => this.ReturnValue != null;
-
-        public Construct? ReturnValue { get; }
-
         public string Identifier { get; }
 
         public Instruction[] Instructions { get; }
 
-        public Section(string identifier, Instruction[] instructions, Construct? returnValue = null)
+        public Section(string identifier, Instruction[] instructions)
         {
             this.Identifier = identifier;
             this.Instructions = instructions;
-            this.ReturnValue = returnValue;
         }
 
         public Section(string name) : this(name, new Instruction[] { })

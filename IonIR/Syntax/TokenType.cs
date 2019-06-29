@@ -44,6 +44,8 @@ namespace Ion.IR.Syntax
 
         SymbolExclamation,
 
+        SymbolPercent,
+
         InstructionCall,
 
         InstructionEnd,

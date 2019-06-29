@@ -31,26 +31,56 @@
     },
     {
         "type": 3,
-        "value": "void",
+        "value": "i32",
         "startPos": 9,
-        "EndPos": 13
+        "EndPos": 12
     },
     {
         "type": 3,
         "value": "entry",
-        "startPos": 13,
-        "EndPos": 18
+        "startPos": 12,
+        "EndPos": 17
     },
     {
         "type": 9,
         "value": ":",
+        "startPos": 18,
+        "EndPos": 19
+    },
+    {
+        "type": 3,
+        "value": "end",
         "startPos": 19,
-        "EndPos": 20
+        "EndPos": 22
+    },
+    {
+        "type": 9,
+        "value": ":",
+        "startPos": 23,
+        "EndPos": 24
+    },
+    {
+        "type": 3,
+        "value": "i32",
+        "startPos": 25,
+        "EndPos": 28
+    },
+    {
+        "type": 7,
+        "value": "0",
+        "startPos": 28,
+        "EndPos": 29
+    },
+    {
+        "type": 15,
+        "value": ";",
+        "startPos": 30,
+        "EndPos": 31
     },
     {
         "type": 11,
         "value": "~",
-        "startPos": 20,
-        "EndPos": 21
+        "startPos": 31,
+        "EndPos": 32
     }
 ]

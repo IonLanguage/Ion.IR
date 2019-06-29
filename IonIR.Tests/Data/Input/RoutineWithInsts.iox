@@ -1,4 +1,4 @@
-@test() :void
+@test() :i32
 entry:
-#result = end :i32 0;
+end :i32 0;
 ~

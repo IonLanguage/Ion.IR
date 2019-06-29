@@ -115,6 +115,9 @@ namespace Ion.IR.Handling
                 throw new Exception($"Unrecognized literal: {node.Content}");
             }
 
+            // Append the value onto the stack.
+            this.valueStack.Push(value);
+
             // Return the node.
             return node;
         }
@@ -185,11 +188,6 @@ namespace Ion.IR.Handling
             {
                 throw new Exception("Unexpected function prototype to be null");
             }
-            // Ensure that body returns a value if applicable.
-            else if (!node.Prototype.ReturnKind.IsVoid && !node.Body.HasReturnValue)
-            {
-                throw new Exception("Functions that do not return void must return a value");
-            }
             // Ensures the function does not already exist.
             else if (this.module.ContainsFunction(node.Prototype.Identifier))
             {
@@ -251,6 +249,13 @@ namespace Ion.IR.Handling
 
             // Pop the body off the stack.
             this.blockStack.Pop();
+
+            // TODO
+            // Ensure that body returns a value if applicable.
+            // else if (!node.Prototype.ReturnKind.IsVoid && !node.Body.HasReturnValue)
+            // {
+            //     throw new Exception("Functions that do not return void must return a value");
+            // }
 
             // Verify the function.
             function.Verify();
@@ -460,6 +465,9 @@ namespace Ion.IR.Handling
 
             // Create the block.
             LlvmBlock block = this.function.AppendBlock(node.Identifier);
+
+            // Set builder.
+            this.builder = block.Builder;
 
             // Process the section's instructions.
             foreach (Instruction inst in node.Instructions)

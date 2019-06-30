@@ -69,6 +69,74 @@ namespace Ion.IR.Handling
             return node.VisitChildren(this);
         }
 
+        public Construct VisitArray(Constructs.Array node)
+        {
+            // Prepare the value buffer list.
+            List<LlvmValue> values = new List<LlvmValue>();
+
+            // Iterate and emit all the values onto the buffer list.
+            foreach (Value value in node.Values)
+            {
+                // Visit the value.
+                this.VisitValue(value);
+
+                // Pop the value off the stack.
+                LlvmValue llvmValue = this.valueStack.Pop();
+
+                // Append the value onto the buffer list.
+                values.Add(llvmValue);
+            }
+
+            // Visit the kind.
+            this.VisitKind(node.Kind);
+
+            // Pop the type off the stack.
+            LlvmType elementType = this.typeStack.Pop();
+
+            // Create the array.
+            LlvmValue array = LlvmFactory.Array(elementType, values.ToArray());
+
+            // Append the array onto the stack.
+            this.valueStack.Push(array);
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitGlobal(Global node)
+        {
+            // Visit the kind.
+            this.VisitKind(node.Kind);
+
+            // Pop the type off the stack.
+            LlvmType type = this.typeStack.Pop();
+
+            // Create the global variable.
+            LlvmGlobal global = this.module.CreateGlobal(node.Identifier, type);
+
+            // Set the linkage to common.
+            global.SetLinkage(LLVMLinkage.LLVMCommonLinkage);
+
+            // Assign initial value if applicable.
+            if (node.InitialValue != null)
+            {
+                // Visit the initial value.
+                this.Visit(node.InitialValue);
+
+                // Pop off the initial value off the stack.
+                LlvmValue initialValue = this.valueStack.Pop();
+
+                // Set the initial value.
+                global.SetInitialValue(initialValue);
+            }
+
+            // Append the global onto the stack.
+            this.valueStack.Push(global);
+
+            // Return the node.
+            return node;
+        }
+
         public Construct VisitExtern(Extern node)
         {
             // Ensure prototype is set.

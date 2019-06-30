@@ -32,6 +32,8 @@ namespace Ion.IR.Constructs
 
         Extern,
 
-        Global
+        Global,
+
+        Array
     }
 }

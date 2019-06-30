@@ -57,40 +57,6 @@ namespace Ion.IR.Handling
             return node;
         }
 
-        public Construct VisitGlobal(Global node)
-        {
-            // Visit the kind.
-            this.VisitKind(node.Kind);
-
-            // Pop the type off the stack.
-            LlvmType type = this.typeStack.Pop();
-
-            // Create the global variable.
-            LlvmGlobal global = this.module.CreateGlobal(node.Identifier, type);
-
-            // Set the linkage to common.
-            global.SetLinkage(LLVMLinkage.LLVMCommonLinkage);
-
-            // Assign initial value if applicable.
-            if (node.InitialValue != null)
-            {
-                // Visit the initial value.
-                this.Visit(node.InitialValue);
-
-                // Pop off the initial value off the stack.
-                LlvmValue initialValue = this.valueStack.Pop();
-
-                // Set the initial value.
-                global.SetInitialValue(initialValue);
-            }
-
-            // Append the global onto the stack.
-            this.valueStack.Push(global);
-
-            // Return the node.
-            return node;
-        }
-
         public Construct VisitStoreInst(StoreInst node)
         {
             // Create the LLVM store instruction.
@@ -138,6 +104,5 @@ namespace Ion.IR.Handling
             // Return the node.
             return node;
         }
-
     }
 }

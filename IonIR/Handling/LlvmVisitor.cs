@@ -69,6 +69,61 @@ namespace Ion.IR.Handling
             return node.VisitChildren(this);
         }
 
+        public Construct VisitExtern(Extern node)
+        {
+            // Ensure prototype is set.
+            if (node.Prototype == null)
+            {
+                throw new Exception("Unexpected external definition's prototype to be null");
+            }
+
+            // Create the argument buffer list.
+            List<LlvmType> arguments = new List<LlvmType>();
+
+            // TODO: What about reference? Arguments must be named for extern?
+            foreach ((Kind kind, Reference reference) in node.Prototype.Arguments)
+            {
+                // Visit the kind.
+                this.VisitKind(kind);
+
+                // Pop the type off the stack.
+                LlvmType argumentType = this.typeStack.Pop();
+
+                // Append onto the arguments list.
+                arguments.Add(argumentType);
+            }
+
+            // Visit the prototype's return kind.
+            this.Visit(node.Prototype.ReturnKind);
+
+            // Pop the return type off the stack.
+            LlvmType returnType = this.typeStack.Pop();
+
+            // Emit the function type.
+            LlvmType type = LlvmFactory.Function(returnType, arguments.ToArray(), node.Prototype.HasInfiniteArguments);
+
+            // Emit the external definition to context and capture the LLVM value reference.
+            LlvmValue @extern = this.module.CreateFunction(node.Prototype.Identifier, type);
+
+            // Determine if should be registered on the symbol table.
+            if (!this.module.ContainsFunction(node.Prototype.Identifier))
+            {
+                // Register the external definition as a function in the symbol table.
+                this.module.RegisterFunction((LlvmFunction)@extern);
+            }
+            // Otherwise, throw an error.
+            else
+            {
+                throw new Exception($"Warning: Extern definition '{node.Prototype.Identifier}' being re-defined");
+            }
+
+            // Push the resulting value onto the stack.
+            this.valueStack.Push(@extern);
+
+            // Return the node.
+            return node;
+        }
+
         public Construct VisitValue(Value node)
         {
             // Create the value buffer.

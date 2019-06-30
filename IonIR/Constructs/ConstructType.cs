@@ -30,6 +30,8 @@ namespace Ion.IR.Constructs
 
         BinaryExpr,
 
-        Extern
+        Extern,
+
+        Global
     }
 }

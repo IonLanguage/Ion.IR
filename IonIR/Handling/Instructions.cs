@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Ion.Engine.Llvm;
 using Ion.IR.Constructs;
 using Ion.IR.Instructions;
+using LLVMSharp;
 
 namespace Ion.IR.Handling
 {
@@ -51,6 +52,40 @@ namespace Ion.IR.Handling
 
             // Append the value onto the stack.
             this.valueStack.Push(call);
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitGlobal(Global node)
+        {
+            // Visit the kind.
+            this.VisitKind(node.Kind);
+
+            // Pop the type off the stack.
+            LlvmType type = this.typeStack.Pop();
+
+            // Create the global variable.
+            LlvmGlobal global = this.module.CreateGlobal(node.Identifier, type);
+
+            // Set the linkage to common.
+            global.SetLinkage(LLVMLinkage.LLVMCommonLinkage);
+
+            // Assign initial value if applicable.
+            if (node.InitialValue != null)
+            {
+                // Visit the initial value.
+                this.Visit(node.InitialValue);
+
+                // Pop off the initial value off the stack.
+                LlvmValue initialValue = this.valueStack.Pop();
+
+                // Set the initial value.
+                global.SetInitialValue(initialValue);
+            }
+
+            // Append the global onto the stack.
+            this.valueStack.Push(global);
 
             // Return the node.
             return node;

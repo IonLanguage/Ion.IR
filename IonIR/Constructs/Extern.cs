@@ -3,7 +3,7 @@ using Ion.IR.Handling;
 
 namespace Ion.IR.Constructs
 {
-    public abstract class Extern : Construct
+    public class Extern : Construct
     {
         public override ConstructType ConstructType => ConstructType.Extern;
 

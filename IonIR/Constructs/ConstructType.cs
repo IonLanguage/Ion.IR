@@ -34,6 +34,8 @@ namespace Ion.IR.Constructs
 
         Global,
 
-        Array
+        Array,
+
+        If
     }
 }

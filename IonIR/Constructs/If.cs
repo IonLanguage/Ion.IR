@@ -1,5 +1,6 @@
 using System;
 using Ion.IR.Constructs;
+using Ion.IR.Handling;
 
 namespace Ion.Generation
 {
@@ -25,6 +26,16 @@ namespace Ion.Generation
             this.Condition = condition;
             this.Action = action;
             this.Otherwise = otherwise;
+        }
+
+        public override string ToString()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Construct Accept(LlvmVisitor visitor)
+        {
+            return visitor.VisitIf(this);
         }
     }
 }

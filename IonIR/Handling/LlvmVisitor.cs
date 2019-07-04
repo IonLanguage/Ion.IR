@@ -72,54 +72,54 @@ namespace Ion.IR.Handling
 
         public Construct VisitIf(If node)
         {
+            // TODO: Action and alternative blocks not being handled, for debugging purposes.
+            
             // Visit the condition.
             this.Visit(node.Condition);
 
             // Pop the condition off the stack.
-
-            // TODO: Action and alternative blocks not being handled, for debugging purposes.
-            // Emit the condition value.
-            LLVMValueRef conditionValue = this.Condition.Emit(context);
+            LlvmValue conditionValue = this.valueStack.Pop();
 
             // Create a zero-value double for the boolean comparison.
-            LLVMValueRef zero = LLVM.ConstReal(PrimitiveTypeFactory.Double().Emit(), 0.0);
+            LlvmValue zero = LlvmFactory.Double(0);
 
             // TODO: Hard-coded name.
             // Build the comparison, condition will be convered to a boolean for a 'ONE' (non-equal) comparison.
-            LLVMValueRef comparison = LLVM.BuildFCmp(context.Target, LLVMRealPredicate.LLVMRealONE, conditionValue, zero, "ifcond");
+            LlvmValue comparison = LLVM.BuildFCmp(this.builder.Unwrap(), LLVMRealPredicate.LLVMRealONE, conditionValue.Unwrap(), zero.Unwrap(), "ifcond").Wrap();
 
             // Retrieve the parent function from the builder.
-            LLVMValueRef function = LLVM.GetBasicBlockParent(LLVM.GetInsertBlock(context.Target));
+            LlvmFunction function = this.builder.Block.Parent;
 
-            LLVMBasicBlockRef action = LLVM.AppendBasicBlock(function, "then");
+            // Create the action block.
+            LlvmBlock action = function.AppendBlock("then");
 
             // TODO: Debugging, Ret void for action.
-            LLVM.PositionBuilderAtEnd(context.Target, action);
-            LLVM.BuildRetVoid(context.Target);
+            action.Builder.CreateReturnVoid();
 
-            LLVMBasicBlockRef otherwise = LLVM.AppendBasicBlock(function, "else");
+            LlvmBlock otherwise = function.AppendBlock("else");
 
             // TODO: Debugging, ret void for otherwise.
-            LLVM.PositionBuilderAtEnd(context.Target, otherwise);
-            LLVM.BuildRetVoid(context.Target);
+            otherwise.Builder.CreateReturnVoid();
 
-            LLVMBasicBlockRef merge = LLVM.AppendBasicBlock(function, "ifcont");
+            LlvmBlock merge = function.AppendBlock("ifcont");
 
             // TODO: Debugging, ret void for merge.
-            LLVM.PositionBuilderAtEnd(context.Target, merge);
-            LLVM.BuildRetVoid(context.Target);
+            merge.Builder.CreateReturnVoid();
 
             // Build the if construct.
-            LLVMValueRef @if = LLVM.BuildCondBr(context.Target, comparison, action, otherwise);
+            LlvmValue @if = LLVM.BuildCondBr(this.builder.Unwrap(), comparison.Unwrap(), action.Unwrap(), otherwise.Unwrap()).Wrap();
 
             // TODO: Complete implementation, based off: https://github.com/microsoft/LLVMSharp/blob/master/KaleidoscopeTutorial/Chapter5/KaleidoscopeLLVM/CodeGenVisitor.cs#L214
             // ...
 
             // TODO: Debugging, not complete.
-            LLVM.PositionBuilderAtEnd(context.Target, action);
+            action.Builder.PositionAtEnd(); // ? Delete..
+            
+            // Append the if construct onto the stack.
+            this.valueStack.Push(@if);
 
-            // Return the resulting LLVM value reference for further use if applicable.
-            return @if;
+            // Return the node.
+            return node;
         }
 
         public Construct VisitArray(Constructs.Array node)

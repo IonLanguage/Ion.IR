@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using Ion.Engine.Llvm;
-using Ion.Generation;
 using Ion.IR.Cognition;
 using Ion.IR.Constants;
 using Ion.IR.Constructs;

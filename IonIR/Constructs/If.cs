@@ -1,8 +1,7 @@
 using System;
-using Ion.IR.Constructs;
 using Ion.IR.Handling;
 
-namespace Ion.Generation
+namespace Ion.IR.Constructs
 {
     public class If : Construct
     {

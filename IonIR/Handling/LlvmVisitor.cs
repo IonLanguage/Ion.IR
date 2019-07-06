@@ -69,6 +69,92 @@ namespace Ion.IR.Handling
             return node.VisitChildren(this);
         }
 
+        public Construct VisitStructDefProperty(StructDefProperty node)
+        {
+            // Visit the kind.
+            this.VisitKind(node.Kind);
+
+            // TODO: Should register property along with its name on the symbol table somehow (name not being used).
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitStructDef(StructDef node)
+        {
+            // Create the struct construct.
+            LLVMTypeRef @struct = LLVM.StructCreateNamed(context.Target.GetContext(), node.Identifier);
+
+            // Create the body buffer list.
+            List<LLVMTypeRef> body = new List<LLVMTypeRef>();
+
+            // Create a buffer dictionary for the symbol.
+            Dictionary<string, LLVMTypeRef> symbolProperties = new Dictionary<string, LLVMTypeRef>();
+
+            // Map the body's properties onto the body.
+            foreach (StructDefProperty property in node.Body.Properties)
+            {
+                // Emit the property's type.
+                LLVMTypeRef type = property.Type.Emit();
+
+                // Append it to the body.
+                body.Add(type);
+
+                // Append it to the symbol's properties dictionary.
+                symbolProperties.Add(property.Identifier, type);
+            }
+
+            // Set the struct's body.
+            LLVM.StructSetBody(@struct, body.ToArray(), true);
+
+            // Create the struct symbol.
+            StructSymbol symbol = new StructSymbol(this.Identifier, @struct, symbolProperties);
+
+            // TODO: Ensure it does not already exist on the symbol table? Or automatically does it?
+            // Register struct as a symbol in the symbol table.
+            context.SymbolTable.structs.Add(symbol);
+
+            // Return the resulting struct.
+            return @struct;
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitVarDeclare(VarDeclare node)
+        {
+            // Create the variable.
+            LlvmValue variable = LLVM.BuildAlloca(context.Target, this.ValueType.Emit(), node.Identifier);
+
+            // Assign value if applicable.
+            if (node.Value != null)
+            {
+                // Create the store instruction.
+                LLVM.BuildStore(context.Target, node.Value.Emit(context), variable);
+
+                // Register on symbol table.
+                context.SymbolTable.localScope.Add(node.Identifier, variable);
+            }
+
+            // Append the value onto the stack.
+            this.valueStack.Push(variable);
+
+            // Return the node.
+            return node;
+        }
+
+        public Construct VisitNumericExpr(NumericExpr node)
+        {
+            // Create the value.
+            LlvmValue reference = Resolver.Literal(node.TokenType, node.Value, node.Type);
+
+            // Append the value onto the stack.
+            this.valueStack.Push(reference);
+
+            // Return the node.
+            return node;
+        }
+
         public Construct VisitString(IR.Constructs.String node)
         {
             // TODO: Global string name.
@@ -76,13 +162,13 @@ namespace Ion.IR.Handling
             string name = "str";
 
             // Create the global string pointer.
-            LlvmValue stringPtr = this.module.CreateGlobalStringPointer(node.Value);
+            LlvmValue stringPtr = this.builder.CreateGlobalString(node.Value, name, true);
 
-            // Register the value on the symbol table.
-            context.SymbolTable.strings.Add(name, stringPtr);
+            // Append the pointer value onto the stack.
+            this.valueStack.Push(stringPtr);
 
-            // Return the string pointer value.
-            return stringPtr;
+            // Return the node.
+            return node;
         }
 
         public Construct VisitIf(If node)

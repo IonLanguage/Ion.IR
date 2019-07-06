@@ -72,9 +72,9 @@ namespace Ion.IR.Handling
         public Construct VisitStruct(Struct node)
         {
             // Ensure target struct exists on the symbol table.
-            if (!context.SymbolTable.structs.Contains(this.TargetIdentifier))
+            if (!context.SymbolTable.structs.Contains(node.TargetIdentifier))
             {
-                throw new Exception($"Reference to undefined struct named '${this.TargetIdentifier}'");
+                throw new Exception($"Reference to undefined struct named '${node.TargetIdentifier}'");
             }
 
             // Retrieve the symbol from the symbol table.
@@ -117,19 +117,22 @@ namespace Ion.IR.Handling
         public Construct VisitStructDef(StructDef node)
         {
             // Create the struct construct.
-            LLVMTypeRef @struct = LLVM.StructCreateNamed(context.Target.GetContext(), node.Identifier);
+            LlvmType @struct = LLVM.StructCreateNamed(this.module.Context, node.Identifier).Wrap();
 
             // Create the body buffer list.
-            List<LLVMTypeRef> body = new List<LLVMTypeRef>();
+            List<LlvmType> body = new List<LlvmType>();
 
             // Create a buffer dictionary for the symbol.
-            Dictionary<string, LLVMTypeRef> symbolProperties = new Dictionary<string, LLVMTypeRef>();
+            Dictionary<string, LlvmType> symbolProperties = new Dictionary<string, LlvmType>();
 
             // Map the body's properties onto the body.
-            foreach (StructDefProperty property in node.Body.Properties)
+            foreach (StructDefProperty property in node.Body)
             {
-                // Emit the property's type.
-                LLVMTypeRef type = property.Type.Emit();
+                // Visit the kind.
+                this.VisitKind(property.Kind);
+
+                // Pop the type off the stack.
+                LlvmType type = this.typeStack.Pop();
 
                 // Append it to the body.
                 body.Add(type);
@@ -142,14 +145,14 @@ namespace Ion.IR.Handling
             LLVM.StructSetBody(@struct, body.ToArray(), true);
 
             // Create the struct symbol.
-            StructSymbol symbol = new StructSymbol(this.Identifier, @struct, symbolProperties);
+            StructSymbol symbol = new StructSymbol(node.Identifier, @struct, symbolProperties);
 
             // TODO: Ensure it does not already exist on the symbol table? Or automatically does it?
             // Register struct as a symbol in the symbol table.
             context.SymbolTable.structs.Add(symbol);
 
-            // Return the resulting struct.
-            return @struct;
+            // Append the resulting struct onto the stack.
+            this.typeStack.Push(@struct);
 
             // Return the node.
             return node;

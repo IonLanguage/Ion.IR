@@ -38,6 +38,12 @@ namespace Ion.IR.Constructs
 
         If,
 
-        String
+        String,
+
+        NumericExpr,
+
+        VarDeclare,
+
+        StructDef
     }
 }

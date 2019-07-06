@@ -44,6 +44,8 @@ namespace Ion.IR.Constructs
 
         VarDeclare,
 
-        StructDef
+        StructDef,
+
+        Struct
     }
 }

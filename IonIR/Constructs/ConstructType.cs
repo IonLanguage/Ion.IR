@@ -36,6 +36,8 @@ namespace Ion.IR.Constructs
 
         Array,
 
-        If
+        If,
+
+        String
     }
 }

@@ -69,10 +69,26 @@ namespace Ion.IR.Handling
             return node.VisitChildren(this);
         }
 
+        public Construct VisitString(IR.Constructs.String node)
+        {
+            // TODO: Global string name.
+            // Retrieve a string name.
+            string name = "str";
+
+            // Create the global string pointer.
+            LlvmValue stringPtr = this.module.CreateGlobalStringPointer(node.Value);
+
+            // Register the value on the symbol table.
+            context.SymbolTable.strings.Add(name, stringPtr);
+
+            // Return the string pointer value.
+            return stringPtr;
+        }
+
         public Construct VisitIf(If node)
         {
             // TODO: Action and alternative blocks not being handled, for debugging purposes.
-            
+
             // Visit the condition.
             this.Visit(node.Condition);
 
@@ -113,7 +129,7 @@ namespace Ion.IR.Handling
 
             // TODO: Debugging, not complete.
             action.Builder.PositionAtEnd(); // ? Delete..
-            
+
             // Append the if construct onto the stack.
             this.valueStack.Push(@if);
 

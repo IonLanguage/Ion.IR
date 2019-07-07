@@ -116,9 +116,6 @@ namespace Ion.IR.Handling
 
         public Construct VisitStructDef(StructDef node)
         {
-            // Create the struct construct.
-            LlvmType @struct = LLVM.StructCreateNamed(this.module.Context, node.Identifier).Wrap();
-
             // Create the body buffer list.
             List<LlvmType> body = new List<LlvmType>();
 
@@ -141,15 +138,8 @@ namespace Ion.IR.Handling
                 symbolProperties.Add(property.Identifier, type);
             }
 
-            // Set the struct's body.
-            LLVM.StructSetBody(@struct, body.ToArray(), true);
-
-            // Create the struct symbol.
-            StructSymbol symbol = new StructSymbol(node.Identifier, @struct, symbolProperties);
-
-            // TODO: Ensure it does not already exist on the symbol table? Or automatically does it?
-            // Register struct as a symbol in the symbol table.
-            context.SymbolTable.structs.Add(symbol);
+            // Create the struct.
+            LlvmType type = this.module.CreateStruct(node.Identifier, body.ToArray());
 
             // Append the resulting struct onto the stack.
             this.typeStack.Push(@struct);

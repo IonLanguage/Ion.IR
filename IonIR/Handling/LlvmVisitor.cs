@@ -139,7 +139,7 @@ namespace Ion.IR.Handling
             }
 
             // Create the struct.
-            LlvmType type = this.module.CreateStruct(node.Identifier, body.ToArray());
+            LlvmType @struct = this.module.CreateStruct(node.Identifier, body.ToArray());
 
             // Append the resulting struct onto the stack.
             this.typeStack.Push(@struct);

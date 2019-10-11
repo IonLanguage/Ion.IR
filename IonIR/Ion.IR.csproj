@@ -7,7 +7,7 @@
         <RootNamespace>Ion.IR</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="LLVMSharp" Version="5.0.0" />
+        <PackageReference Include="LLVMSharp" Version="8.0.0-beta" />
         <ProjectReference Include="../Ion.Engine/IonEngine/Ion.Engine.csproj" />
     </ItemGroup>
 </Project>
